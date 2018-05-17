@@ -40,4 +40,12 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
-exclude: ['fsharp-posts', 'packages']
+exclude:
+    - Gemfile
+    - Gemfile.lock
+    - fsx
+    - build.fsx
+    - template.html
+    - paket.lock
+    - paket.dependencies
+    - packages
