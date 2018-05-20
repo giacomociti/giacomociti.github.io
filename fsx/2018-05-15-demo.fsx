@@ -1,5 +1,5 @@
 (**
-Literate sample
+Literate samples
 ===============
 
 This file demonstrates how to write literate F# script
@@ -105,7 +105,3 @@ let ``1 + 1 should be equal to 2``() =
 (**
 Others examples follow here.
 *)
-(*** hide ***)
----
-layout: post
---- 
