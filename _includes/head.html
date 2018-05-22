@@ -4,8 +4,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {%- seo -%}
 
-  <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
-
   <script src="https://code.jquery.com/jquery-1.8.0.js"></script>
   <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
@@ -16,6 +14,9 @@
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
+
+  <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
+  <link type="text/css" rel="stylesheet" href="/content/style.css" />
 
   {%- feed_meta -%}
   {%- if jekyll.environment == 'production' and site.google_analytics -%}
