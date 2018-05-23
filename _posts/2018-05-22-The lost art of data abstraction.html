@@ -1,0 +1,477 @@
+---
+layout: post
+---
+<h2>Two types of ADT</h2>
+<p>Algebraic Data Types and Abstract Data Types share the same acronym
+but are very different concepts. Both are clever ideas, but with opposite aims.
+In this post I will use F# to show abstract data types and hint at some beautiful
+and old techniques for their algebraic specification.</p>
+<h2>Algebraic Data Types</h2>
+<p>Algebraic Data Types are the workhorses of statically typed functional languages like F#.
+They are also known as <em>sum types</em> or <em>discriminated unions</em>, so I will refer to them as DUs
+here, reserving the ADT acronym for abstract data types which is the main subject of the post.
+There's no need to introduce DUs because I assume they are well known since they're ofter praised
+as a great tool for <a href="https://fsharpforfunandprofit.com/ddd/">domain modeling</a>
+and <a href="https://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/">making illegal states unrepresentable</a>.
+In this post we will see that they are not completely unrelated to abstract data types:
+in fact DUs are useful as internal representation of ADT values and they also
+play a role in the algebraic specification of ADTs (as the <em>algebraic</em> adjective may suggest).</p>
+<h2>Abstract Data Types</h2>
+<p>While DUs are concrete data structures, abstraction is (unsurprisingly) the defining trait of abstract data types.
+ADTs are the ultimate tool for encapsulation and information hiding: their behavior can be described only implicitly, relating values obtained applying the ADT operations without referencing their internal representation.</p>
+<h3>Objects and ADTs</h3>
+<p>There are important <a href="https://medium.com/JosephJnk/abstract-data-types-and-objects-17828bd4abdc">differences between objects and ADTs</a>
+but even <a href="https://en.wikipedia.org/wiki/Object-Oriented_Software_Construction">Bertrand Meyer</a>
+advocates conflating the two concepts and I sympathize a lot with this view because for me
+the similarities outweight the differences.
+It's a fact of (computing) history that <a href="https://hal.inria.fr/hal-01335657/document">objects won over ADTs</a>
+and even a functional first language like <a href="https://skillsmatter.com/skillscasts/11439-keynote-f-sharp-code-i-love">F# embraces objects</a>.
+That's why I'm using F# objects to show ADTs (modules are used in the ML tradition).
+This is also an occasion to show that <em>immutable</em> objects are very nice and close to the
+mathematical notion of abstract data types.</p>
+<h3>The obligatory stack example</h3>
+<p>The standard pedagogical example of ADT is the stack, whose signature features the operations
+<code>New</code>, <code>Push</code>, <code>Pop</code> and <code>Top</code>:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">type</span> <span class="t">IStack</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span> <span class="o">=</span>
+        <span class="c">// abstract static New: unit -&gt; IStack&lt;&#39;a&gt;</span>
+        <span class="k">abstract</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">Push</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">IStack</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span>
+        <span class="k">abstract</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">Pop</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">unit</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="t">IStack</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span>
+        <span class="k">abstract</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">Top</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="t">Option</span>
+</code></pre></td>
+</tr>
+</table>
+<p>Unfortunately neither constructors nor static members are allowed in .NET interfaces
+(in Java 8 they are allowed) so we cannot express the <code>New</code> operation in the above signature definition.
+Let's then move to a proper class, although with a dummy implementation for now:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">type</span> <span class="k">private</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="t">DummyRepresentation</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="p">TODO</span>
+
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="t">Stack</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span> <span class="k">private</span>(<span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="i">repr</span>) <span class="o">=</span>
+
+        <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="f">New</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="t">Stack</span>(<span onmouseout="hideTip(event, 'fs8', 14)" onmouseover="showTip(event, 'fs8', 14)" class="p">TODO</span>)
+        <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="f">Push</span>(<span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="i">x</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="t">Stack</span>(<span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="p">TODO</span>)
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="f">Pop</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 21)" onmouseover="showTip(event, 'fs9', 21)" class="t">Stack</span>(<span onmouseout="hideTip(event, 'fs8', 22)" onmouseover="showTip(event, 'fs8', 22)" class="p">TODO</span>)
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs14', 23)" onmouseover="showTip(event, 'fs14', 23)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="i">Top</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs6', 25)" onmouseover="showTip(event, 'fs6', 25)" class="t">Option</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="p">None</span>
+</code></pre></td>
+</tr>
+</table>
+<p>The class constructor is private and takes a private representation object.
+Since for now this representation has a single dummy value (<code>TODO</code>) all the ADT constructors
+(<code>New</code>, <code>Push</code> and <code>Pop</code>) use the same dummy value.</p>
+<p>A side note on terminology: in ADT parlance a <em>constructor</em> is any operation returning a value of the ADT type.
+That's why in our stack all operations (except <code>Top</code>) qualify as constructors.</p>
+<p>The above implementation is clearly wrong but, to claim that, we first need to <em>specify</em> what is the correct behavior and we can do this with <em>axioms</em> stating the properties of the ADT operations.</p>
+<p>We can use <a href="https://fscheck.github.io/FsCheck/">FsCheck</a> to check the correctness of our implementation (hence we
+won't prove it but at least test it thoroughly with many random values).</p>
+<h3>Stack Axioms</h3>
+<p>Here are the stack axioms (we use <code>int</code> for the generic parameter but any type will do):</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="f">axiom1</span> () <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs19', 28)" onmouseover="showTip(event, 'fs19', 28)" class="t">Stack</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="t">int</span><span class="o">&gt;</span><span class="o">.</span><span class="f">New</span>()<span class="o">.</span><span class="f">Pop</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="t">Stack</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs20', 31)" onmouseover="showTip(event, 'fs20', 31)" class="t">int</span><span class="o">&gt;</span><span class="o">.</span><span class="f">New</span>()
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 32)" onmouseover="showTip(event, 'fs21', 32)" class="f">axiom2</span> () <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs19', 33)" onmouseover="showTip(event, 'fs19', 33)" class="t">Stack</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs20', 34)" onmouseover="showTip(event, 'fs20', 34)" class="t">int</span><span class="o">&gt;</span><span class="o">.</span><span class="f">New</span>()<span class="o">.</span><span class="i">Top</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs17', 35)" onmouseover="showTip(event, 'fs17', 35)" class="p">None</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 36)" onmouseover="showTip(event, 'fs22', 36)" class="f">axiom3</span> (<span onmouseout="hideTip(event, 'fs23', 37)" onmouseover="showTip(event, 'fs23', 37)" class="i">s</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs19', 38)" onmouseover="showTip(event, 'fs19', 38)" class="t">Stack</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs20', 39)" onmouseover="showTip(event, 'fs20', 39)" class="t">int</span><span class="o">&gt;</span>) <span onmouseout="hideTip(event, 'fs24', 40)" onmouseover="showTip(event, 'fs24', 40)" class="i">x</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs23', 41)" onmouseover="showTip(event, 'fs23', 41)" class="i">s</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 42)" onmouseover="showTip(event, 'fs25', 42)" class="f">Push</span>(<span onmouseout="hideTip(event, 'fs24', 43)" onmouseover="showTip(event, 'fs24', 43)" class="i">x</span>)<span class="o">.</span><span class="f">Pop</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs23', 44)" onmouseover="showTip(event, 'fs23', 44)" class="i">s</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 45)" onmouseover="showTip(event, 'fs26', 45)" class="f">axiom4</span> (<span onmouseout="hideTip(event, 'fs23', 46)" onmouseover="showTip(event, 'fs23', 46)" class="i">s</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs19', 47)" onmouseover="showTip(event, 'fs19', 47)" class="t">Stack</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs20', 48)" onmouseover="showTip(event, 'fs20', 48)" class="t">int</span><span class="o">&gt;</span>) <span onmouseout="hideTip(event, 'fs24', 49)" onmouseover="showTip(event, 'fs24', 49)" class="i">x</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs23', 50)" onmouseover="showTip(event, 'fs23', 50)" class="i">s</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 51)" onmouseover="showTip(event, 'fs25', 51)" class="f">Push</span>(<span onmouseout="hideTip(event, 'fs24', 52)" onmouseover="showTip(event, 'fs24', 52)" class="i">x</span>)<span class="o">.</span><span class="i">Top</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs27', 53)" onmouseover="showTip(event, 'fs27', 53)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs24', 54)" onmouseover="showTip(event, 'fs24', 54)" class="i">x</span>
+
+    <span class="c">//#r &quot;FsCheck.dll&quot;</span>
+    <span class="c">//open FsCheck</span>
+
+    <span class="c">//Check.Quick axiom1</span>
+    <span class="c">//Check.Quick axiom2</span>
+    <span class="c">//Check.Quick axiom3</span>
+    <span class="c">//Check.Quick axiom4</span>
+</code></pre></td>
+</tr>
+</table>
+<p>The meaning of the axioms should be fairly readable:</p>
+<ol>
+<li>popping an empty stack should leave it empty</li>
+<li>there's no top of an empty stack</li>
+<li>pop <em>undo</em> the effect of a push</li>
+<li>pushing an item make it the top</li>
+</ol>
+<p>Different API's are possible, but this one has the advantage of defining
+total functions: <code>Top</code> is defined (albeit with value <code>None</code>) also on the empty stack,
+and popping an empty stack is possible although useless because it will leave it empty.</p>
+<h3>Equality</h3>
+<p>Before running FsCheck we need to fix a couple of things: the first one is that since axioms
+are written as <em>equations</em> comparing ADT values, in order to compare stacks we have to override <code>Equals</code> so that stack values with the same internal representation (whatever it is) are considered equivalent:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 55)" onmouseover="showTip(event, 'fs19', 55)" class="i">Stack</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span> <span class="k">private</span>(<span class="i">repr</span>) <span class="o">=</span>
+
+        <span class="k">static</span> <span class="k">member</span> <span class="i">New</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 56)" onmouseover="showTip(event, 'fs19', 56)" class="i">Stack</span>(<span onmouseout="hideTip(event, 'fs8', 57)" onmouseover="showTip(event, 'fs8', 57)" class="i">TODO</span>)
+        <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span class="i">Push</span>(<span class="i">x</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 58)" onmouseover="showTip(event, 'fs19', 58)" class="i">Stack</span>(<span onmouseout="hideTip(event, 'fs8', 59)" onmouseover="showTip(event, 'fs8', 59)" class="i">TODO</span>)
+        <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span class="i">Pop</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 60)" onmouseover="showTip(event, 'fs19', 60)" class="i">Stack</span>(<span onmouseout="hideTip(event, 'fs8', 61)" onmouseover="showTip(event, 'fs8', 61)" class="i">TODO</span>)
+        <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span class="i">Top</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs6', 62)" onmouseover="showTip(event, 'fs6', 62)" class="i">Option</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs17', 63)" onmouseover="showTip(event, 'fs17', 63)" class="i">None</span>
+
+        <span class="k">member</span> <span class="k">private</span> <span class="i">__</span><span class="o">.</span><span class="i">repr</span> <span class="o">=</span> <span class="i">repr</span>
+        <span class="k">override</span> <span class="i">__</span><span class="o">.</span><span class="i">Equals</span>(<span onmouseout="hideTip(event, 'fs28', 64)" onmouseover="showTip(event, 'fs28', 64)" class="i">obj</span>) <span class="o">=</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs28', 65)" onmouseover="showTip(event, 'fs28', 65)" class="i">obj</span> <span class="k">with</span>
+            | <span class="o">:?</span> <span onmouseout="hideTip(event, 'fs19', 66)" onmouseover="showTip(event, 'fs19', 66)" class="i">Stack</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span> <span class="k">as</span> <span class="i">x</span> <span class="k">-&gt;</span> <span class="i">x</span><span class="o">.</span><span class="i">repr</span><span class="o">.</span><span class="i">Equals</span>(<span class="i">repr</span>)
+            | _ <span class="k">-&gt;</span> <span class="k">false</span>
+        <span class="k">override</span> <span class="i">__</span><span class="o">.</span><span class="i">GetHashCode</span>() <span class="o">=</span> <span class="i">repr</span><span class="o">.</span><span class="i">GetHashCode</span>()
+
+    <span class="c">//and private Representation = TODO</span>
+</code></pre></td>
+</tr>
+</table>
+<h3>Term Algebra</h3>
+<p>Now we are equipped with stack equality but the remaining issue is that FsCheck can't generate
+instances of the <code>Stack</code> type (becuase it is not a concrete data type).
+The trick is to define the so called <em>term algebra</em> as a DU:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs29', 67)" onmouseover="showTip(event, 'fs29', 67)" class="t">StackTerm</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span> <span class="o">=</span>
+        | <span onmouseout="hideTip(event, 'fs30', 68)" onmouseover="showTip(event, 'fs30', 68)" class="p">New</span>
+        | <span onmouseout="hideTip(event, 'fs31', 69)" onmouseover="showTip(event, 'fs31', 69)" class="p">Push</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">a</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs29', 70)" onmouseover="showTip(event, 'fs29', 70)" class="t">StackTerm</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span>
+        | <span onmouseout="hideTip(event, 'fs32', 71)" onmouseover="showTip(event, 'fs32', 71)" class="p">Pop</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs29', 72)" onmouseover="showTip(event, 'fs29', 72)" class="t">StackTerm</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span>
+</code></pre></td>
+</tr>
+</table>
+<p>Notice how <em>data constructors</em> in <code>StackTerm</code> correspond to ADT constructors in the <code>Stack</code> API
+and how simple is to create stack instances from terms:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs33', 73)" onmouseover="showTip(event, 'fs33', 73)" class="f">stack</span> <span onmouseout="hideTip(event, 'fs34', 74)" onmouseover="showTip(event, 'fs34', 74)" class="i">term</span> <span class="o">=</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs34', 75)" onmouseover="showTip(event, 'fs34', 75)" class="i">term</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs30', 76)" onmouseover="showTip(event, 'fs30', 76)" class="p">New</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs19', 77)" onmouseover="showTip(event, 'fs19', 77)" class="t">Stack</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 78)" onmouseover="showTip(event, 'fs35', 78)" class="f">New</span>()
+        | <span onmouseout="hideTip(event, 'fs31', 79)" onmouseover="showTip(event, 'fs31', 79)" class="p">Push</span>(<span onmouseout="hideTip(event, 'fs13', 80)" onmouseover="showTip(event, 'fs13', 80)" class="i">x</span>, <span onmouseout="hideTip(event, 'fs36', 81)" onmouseover="showTip(event, 'fs36', 81)" class="i">s</span>) <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs33', 82)" onmouseover="showTip(event, 'fs33', 82)" class="f">stack</span> <span onmouseout="hideTip(event, 'fs36', 83)" onmouseover="showTip(event, 'fs36', 83)" class="i">s</span>)<span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 84)" onmouseover="showTip(event, 'fs31', 84)" class="f">Push</span>(<span onmouseout="hideTip(event, 'fs13', 85)" onmouseover="showTip(event, 'fs13', 85)" class="i">x</span>)
+        | <span onmouseout="hideTip(event, 'fs32', 86)" onmouseover="showTip(event, 'fs32', 86)" class="p">Pop</span>(<span onmouseout="hideTip(event, 'fs36', 87)" onmouseover="showTip(event, 'fs36', 87)" class="i">s</span>) <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs33', 88)" onmouseover="showTip(event, 'fs33', 88)" class="f">stack</span> <span onmouseout="hideTip(event, 'fs36', 89)" onmouseover="showTip(event, 'fs36', 89)" class="i">s</span>)<span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 90)" onmouseover="showTip(event, 'fs32', 90)" class="f">Pop</span>()
+</code></pre></td>
+</tr>
+</table>
+<p>The <code>stack</code> function highlight the correspondence between the stack API and the term algebra.
+Terms are just stack expressions, for example <code>term1</code> correspond to <code>stack1</code>:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs37', 91)" onmouseover="showTip(event, 'fs37', 91)" class="i">term1</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs31', 92)" onmouseover="showTip(event, 'fs31', 92)" class="p">Push</span>(<span class="n">5</span>, <span onmouseout="hideTip(event, 'fs32', 93)" onmouseover="showTip(event, 'fs32', 93)" class="p">Pop</span>(<span onmouseout="hideTip(event, 'fs31', 94)" onmouseover="showTip(event, 'fs31', 94)" class="p">Push</span>(<span class="n">42</span>, <span onmouseout="hideTip(event, 'fs30', 95)" onmouseover="showTip(event, 'fs30', 95)" class="p">New</span>)))
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs38', 96)" onmouseover="showTip(event, 'fs38', 96)" class="i">stack1</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 97)" onmouseover="showTip(event, 'fs19', 97)" class="t">Stack</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 98)" onmouseover="showTip(event, 'fs35', 98)" class="f">New</span>()<span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 99)" onmouseover="showTip(event, 'fs31', 99)" class="f">Push</span>(<span class="n">42</span>)<span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 100)" onmouseover="showTip(event, 'fs32', 100)" class="f">Pop</span>()<span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 101)" onmouseover="showTip(event, 'fs31', 101)" class="f">Push</span>(<span class="n">5</span>)
+</code></pre></td>
+</tr>
+</table>
+<p>and applyng the <code>stack</code> function to <code>term1</code> we expect to obtain a stack instance equivalent to <code>stack1</code>.</p>
+<p>Random terms can now be generated by FsCheck, we just need to adapt our properties a little:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs39', 102)" onmouseover="showTip(event, 'fs39', 102)" class="f">axiom0</span> (<span onmouseout="hideTip(event, 'fs40', 103)" onmouseover="showTip(event, 'fs40', 103)" class="i">s</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs29', 104)" onmouseover="showTip(event, 'fs29', 104)" class="t">StackTerm</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs20', 105)" onmouseover="showTip(event, 'fs20', 105)" class="t">int</span><span class="o">&gt;</span>) <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs33', 106)" onmouseover="showTip(event, 'fs33', 106)" class="f">stack</span> <span onmouseout="hideTip(event, 'fs40', 107)" onmouseover="showTip(event, 'fs40', 107)" class="i">s</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs33', 108)" onmouseover="showTip(event, 'fs33', 108)" class="f">stack</span> <span onmouseout="hideTip(event, 'fs40', 109)" onmouseover="showTip(event, 'fs40', 109)" class="i">s</span>
+    
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 110)" onmouseover="showTip(event, 'fs18', 110)" class="f">axiom1</span> () <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs19', 111)" onmouseover="showTip(event, 'fs19', 111)" class="t">Stack</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs20', 112)" onmouseover="showTip(event, 'fs20', 112)" class="t">int</span><span class="o">&gt;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 113)" onmouseover="showTip(event, 'fs30', 113)" class="f">New</span>()<span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 114)" onmouseover="showTip(event, 'fs32', 114)" class="f">Pop</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 115)" onmouseover="showTip(event, 'fs19', 115)" class="t">Stack</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs20', 116)" onmouseover="showTip(event, 'fs20', 116)" class="t">int</span><span class="o">&gt;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 117)" onmouseover="showTip(event, 'fs30', 117)" class="f">New</span>()
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 118)" onmouseover="showTip(event, 'fs21', 118)" class="f">axiom2</span> () <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs19', 119)" onmouseover="showTip(event, 'fs19', 119)" class="t">Stack</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs20', 120)" onmouseover="showTip(event, 'fs20', 120)" class="t">int</span><span class="o">&gt;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 121)" onmouseover="showTip(event, 'fs30', 121)" class="f">New</span>()<span class="o">.</span><span class="i">Top</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs17', 122)" onmouseover="showTip(event, 'fs17', 122)" class="p">None</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs41', 123)" onmouseover="showTip(event, 'fs41', 123)" class="f">axiom3</span> (<span onmouseout="hideTip(event, 'fs40', 124)" onmouseover="showTip(event, 'fs40', 124)" class="i">s</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs29', 125)" onmouseover="showTip(event, 'fs29', 125)" class="t">StackTerm</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs20', 126)" onmouseover="showTip(event, 'fs20', 126)" class="t">int</span><span class="o">&gt;</span>) <span onmouseout="hideTip(event, 'fs24', 127)" onmouseover="showTip(event, 'fs24', 127)" class="i">x</span> <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs42', 128)" onmouseover="showTip(event, 'fs42', 128)" class="i">s&#39;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs33', 129)" onmouseover="showTip(event, 'fs33', 129)" class="f">stack</span> <span onmouseout="hideTip(event, 'fs40', 130)" onmouseover="showTip(event, 'fs40', 130)" class="i">s</span>
+        <span onmouseout="hideTip(event, 'fs42', 131)" onmouseover="showTip(event, 'fs42', 131)" class="i">s&#39;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 132)" onmouseover="showTip(event, 'fs25', 132)" class="f">Push</span>(<span onmouseout="hideTip(event, 'fs24', 133)" onmouseover="showTip(event, 'fs24', 133)" class="i">x</span>)<span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 134)" onmouseover="showTip(event, 'fs32', 134)" class="f">Pop</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs42', 135)" onmouseover="showTip(event, 'fs42', 135)" class="i">s&#39;</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs43', 136)" onmouseover="showTip(event, 'fs43', 136)" class="f">axiom4</span> (<span onmouseout="hideTip(event, 'fs40', 137)" onmouseover="showTip(event, 'fs40', 137)" class="i">s</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs29', 138)" onmouseover="showTip(event, 'fs29', 138)" class="t">StackTerm</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs20', 139)" onmouseover="showTip(event, 'fs20', 139)" class="t">int</span><span class="o">&gt;</span>) <span onmouseout="hideTip(event, 'fs24', 140)" onmouseover="showTip(event, 'fs24', 140)" class="i">x</span> <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs42', 141)" onmouseover="showTip(event, 'fs42', 141)" class="i">s&#39;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs33', 142)" onmouseover="showTip(event, 'fs33', 142)" class="f">stack</span> <span onmouseout="hideTip(event, 'fs40', 143)" onmouseover="showTip(event, 'fs40', 143)" class="i">s</span>
+        <span onmouseout="hideTip(event, 'fs42', 144)" onmouseover="showTip(event, 'fs42', 144)" class="i">s&#39;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 145)" onmouseover="showTip(event, 'fs25', 145)" class="f">Push</span>(<span onmouseout="hideTip(event, 'fs24', 146)" onmouseover="showTip(event, 'fs24', 146)" class="i">x</span>)<span class="o">.</span><span class="i">Top</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs27', 147)" onmouseover="showTip(event, 'fs27', 147)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs24', 148)" onmouseover="showTip(event, 'fs24', 148)" class="i">x</span>
+</code></pre></td>
+</tr>
+</table>
+<p>We added also a new axiom for equality (<code>axiom0</code>). This is not specific for stacks,
+in every ADT we expect two values to be equivalent if they are constructed with
+the same sequence of operations.</p>
+<p>We can finally run FsCheck and see our tests fail.
+Now it's time to get back to the implementation and make it compliant with the axioms.</p>
+<h3>Initial Algebra</h3>
+<p>There are of course multiple implementation options, but first we will pursue one which
+is of theoretical interest only.
+We use terms also as the internal representation:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs44', 149)" onmouseover="showTip(event, 'fs44', 149)" class="t">Stack2</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span> <span class="k">when</span> <span class="o">&#39;</span><span class="i">a</span> <span class="o">:</span> <span class="i">equality</span><span class="o">&gt;</span> <span class="k">private</span>(<span onmouseout="hideTip(event, 'fs45', 150)" onmouseover="showTip(event, 'fs45', 150)" class="i">repr</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs29', 151)" onmouseover="showTip(event, 'fs29', 151)" class="t">StackTerm</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span>) <span class="o">=</span>
+    
+        <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs46', 152)" onmouseover="showTip(event, 'fs46', 152)" class="f">reduce</span> <span onmouseout="hideTip(event, 'fs34', 153)" onmouseover="showTip(event, 'fs34', 153)" class="i">term</span> <span class="o">=</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs34', 154)" onmouseover="showTip(event, 'fs34', 154)" class="i">term</span> <span class="k">with</span>
+            | <span onmouseout="hideTip(event, 'fs30', 155)" onmouseover="showTip(event, 'fs30', 155)" class="p">New</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs30', 156)" onmouseover="showTip(event, 'fs30', 156)" class="p">New</span>
+            | <span onmouseout="hideTip(event, 'fs31', 157)" onmouseover="showTip(event, 'fs31', 157)" class="p">Push</span>(<span onmouseout="hideTip(event, 'fs13', 158)" onmouseover="showTip(event, 'fs13', 158)" class="i">x</span>, <span onmouseout="hideTip(event, 'fs36', 159)" onmouseover="showTip(event, 'fs36', 159)" class="i">s</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs31', 160)" onmouseover="showTip(event, 'fs31', 160)" class="p">Push</span>(<span onmouseout="hideTip(event, 'fs13', 161)" onmouseover="showTip(event, 'fs13', 161)" class="i">x</span>, <span onmouseout="hideTip(event, 'fs46', 162)" onmouseover="showTip(event, 'fs46', 162)" class="f">reduce</span> <span onmouseout="hideTip(event, 'fs36', 163)" onmouseover="showTip(event, 'fs36', 163)" class="i">s</span>)
+            | <span onmouseout="hideTip(event, 'fs32', 164)" onmouseover="showTip(event, 'fs32', 164)" class="p">Pop</span>(<span onmouseout="hideTip(event, 'fs30', 165)" onmouseover="showTip(event, 'fs30', 165)" class="p">New</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs30', 166)" onmouseover="showTip(event, 'fs30', 166)" class="p">New</span>
+            | <span onmouseout="hideTip(event, 'fs32', 167)" onmouseover="showTip(event, 'fs32', 167)" class="p">Pop</span>(<span onmouseout="hideTip(event, 'fs31', 168)" onmouseover="showTip(event, 'fs31', 168)" class="p">Push</span>(_, <span onmouseout="hideTip(event, 'fs36', 169)" onmouseover="showTip(event, 'fs36', 169)" class="i">s</span>)) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs46', 170)" onmouseover="showTip(event, 'fs46', 170)" class="f">reduce</span> <span onmouseout="hideTip(event, 'fs36', 171)" onmouseover="showTip(event, 'fs36', 171)" class="i">s</span>
+            | <span onmouseout="hideTip(event, 'fs32', 172)" onmouseover="showTip(event, 'fs32', 172)" class="p">Pop</span>(<span onmouseout="hideTip(event, 'fs36', 173)" onmouseover="showTip(event, 'fs36', 173)" class="i">s</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs32', 174)" onmouseover="showTip(event, 'fs32', 174)" class="p">Pop</span>(<span onmouseout="hideTip(event, 'fs46', 175)" onmouseover="showTip(event, 'fs46', 175)" class="f">reduce</span> <span onmouseout="hideTip(event, 'fs36', 176)" onmouseover="showTip(event, 'fs36', 176)" class="i">s</span>)
+
+        <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs47', 177)" onmouseover="showTip(event, 'fs47', 177)" class="f">New</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs30', 178)" onmouseover="showTip(event, 'fs30', 178)" class="p">New</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs44', 179)" onmouseover="showTip(event, 'fs44', 179)" class="t">Stack2</span>
+
+        <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 180)" onmouseover="showTip(event, 'fs48', 180)" class="f">Push</span>(<span onmouseout="hideTip(event, 'fs49', 181)" onmouseover="showTip(event, 'fs49', 181)" class="i">x</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs31', 182)" onmouseover="showTip(event, 'fs31', 182)" class="p">Push</span>(<span onmouseout="hideTip(event, 'fs49', 183)" onmouseover="showTip(event, 'fs49', 183)" class="i">x</span>, <span onmouseout="hideTip(event, 'fs45', 184)" onmouseover="showTip(event, 'fs45', 184)" class="i">repr</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs44', 185)" onmouseover="showTip(event, 'fs44', 185)" class="t">Stack2</span>
+
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs50', 186)" onmouseover="showTip(event, 'fs50', 186)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs51', 187)" onmouseover="showTip(event, 'fs51', 187)" class="f">Pop</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs32', 188)" onmouseover="showTip(event, 'fs32', 188)" class="p">Pop</span>(<span onmouseout="hideTip(event, 'fs45', 189)" onmouseover="showTip(event, 'fs45', 189)" class="i">repr</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs44', 190)" onmouseover="showTip(event, 'fs44', 190)" class="t">Stack2</span>
+
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs50', 191)" onmouseover="showTip(event, 'fs50', 191)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 192)" onmouseover="showTip(event, 'fs52', 192)" class="i">Top</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs6', 193)" onmouseover="showTip(event, 'fs6', 193)" class="t">Option</span> <span class="o">=</span> 
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs46', 194)" onmouseover="showTip(event, 'fs46', 194)" class="f">reduce</span> <span onmouseout="hideTip(event, 'fs45', 195)" onmouseover="showTip(event, 'fs45', 195)" class="i">repr</span> <span class="k">with</span>
+            | <span onmouseout="hideTip(event, 'fs31', 196)" onmouseover="showTip(event, 'fs31', 196)" class="p">Push</span>(<span onmouseout="hideTip(event, 'fs49', 197)" onmouseover="showTip(event, 'fs49', 197)" class="i">x</span>, _) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs27', 198)" onmouseover="showTip(event, 'fs27', 198)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs49', 199)" onmouseover="showTip(event, 'fs49', 199)" class="i">x</span>
+            | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs17', 200)" onmouseover="showTip(event, 'fs17', 200)" class="p">None</span>
+
+        <span class="k">member</span> <span class="k">private</span> <span onmouseout="hideTip(event, 'fs50', 201)" onmouseover="showTip(event, 'fs50', 201)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs53', 202)" onmouseover="showTip(event, 'fs53', 202)" class="i">repr</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs45', 203)" onmouseover="showTip(event, 'fs45', 203)" class="i">repr</span>
+        <span class="k">override</span> <span onmouseout="hideTip(event, 'fs50', 204)" onmouseover="showTip(event, 'fs50', 204)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 205)" onmouseover="showTip(event, 'fs54', 205)" class="f">Equals</span>(<span onmouseout="hideTip(event, 'fs55', 206)" onmouseover="showTip(event, 'fs55', 206)" class="i">obj</span>) <span class="o">=</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs55', 207)" onmouseover="showTip(event, 'fs55', 207)" class="i">obj</span> <span class="k">with</span>
+            | <span class="o">:?</span> <span onmouseout="hideTip(event, 'fs44', 208)" onmouseover="showTip(event, 'fs44', 208)" class="t">Stack2</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span> <span class="k">as</span> <span onmouseout="hideTip(event, 'fs56', 209)" onmouseover="showTip(event, 'fs56', 209)" class="i">x</span> <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs46', 210)" onmouseover="showTip(event, 'fs46', 210)" class="f">reduce</span> <span onmouseout="hideTip(event, 'fs56', 211)" onmouseover="showTip(event, 'fs56', 211)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs57', 212)" onmouseover="showTip(event, 'fs57', 212)" class="i">repr</span>)<span class="o">.</span><span class="f">Equals</span>(<span onmouseout="hideTip(event, 'fs46', 213)" onmouseover="showTip(event, 'fs46', 213)" class="f">reduce</span> <span onmouseout="hideTip(event, 'fs45', 214)" onmouseover="showTip(event, 'fs45', 214)" class="i">repr</span>)
+            | _ <span class="k">-&gt;</span> <span class="k">false</span>
+        <span class="k">override</span> <span onmouseout="hideTip(event, 'fs50', 215)" onmouseover="showTip(event, 'fs50', 215)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs58', 216)" onmouseover="showTip(event, 'fs58', 216)" class="f">GetHashCode</span>() <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs46', 217)" onmouseover="showTip(event, 'fs46', 217)" class="f">reduce</span> <span onmouseout="hideTip(event, 'fs45', 218)" onmouseover="showTip(event, 'fs45', 218)" class="i">repr</span>)<span class="o">.</span><span class="f">GetHashCode</span>()
+</code></pre></td>
+</tr>
+</table>
+<p>Clearly this implementation is not performant: the representation object
+always keeps growing, even when <code>Pop</code> is called, and a lot of processing is needed
+(the <code>reduce</code> function) for <code>Top</code>, <code>Equals</code> and <code>GetHashCode</code>.
+But it works, and it's derived almost mechanically from the axioms.</p>
+<p>There are <a href="https://cseweb.ucsd.edu/~goguen/sys/obj.html">specification languages</a> in
+which this kind of implementation can often be automatically derived from axioms.</p>
+<p>Axioms determine an equivalence relation on terms, and the ADT values are conceptually
+the equivalence classes of this relation (quotient term algebra).
+This theoretical model is a sort of reference implementation, and this approach (initial algebra)
+is deeply rooted in category theory (so it has to be fancy!).</p>
+<h3>Canonical Constructors</h3>
+<p>A more pragmatic <a href="http://www.cs.unc.edu/techreports/02-012.pdf">approach</a> is to identify <em>canonical</em> constructors,
+the ones intuitively sufficient to construct all values. In our example <code>New</code> and <code>Push</code> are enough because every term
+involving <code>Pop</code> can be expressed in a simpler form using only <code>New</code> and <code>Push</code>. For example <code>term1</code> is intended to be equivalent to:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span onmouseout="hideTip(event, 'fs31', 219)" onmouseover="showTip(event, 'fs31', 219)" class="p">Push</span>(<span class="n">5</span>, <span onmouseout="hideTip(event, 'fs30', 220)" onmouseover="showTip(event, 'fs30', 220)" class="p">New</span>)
+</code></pre></td>
+</tr>
+</table>
+<p>Adopting this approach we have a precise guideline to specify axioms: one axiom is needed for each
+combination of a non-canonical operation applied to the result of a canonical operation.
+Our stack axioms happen to follow this pattern:</p>
+<ol>
+<li>Pop(New) = ...</li>
+<li>Top(New) = ...</li>
+<li>Pop(Push(x, s)) = ...</li>
+<li>Top(Push(x, s)) = ...</li>
+</ol>
+<p>Since only <code>New</code> and <code>Push</code> are needed to build stacks, we can simplify our representation type:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs59', 221)" onmouseover="showTip(event, 'fs59', 221)" class="t">Stack3</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span> <span class="k">when</span> <span class="o">&#39;</span><span class="i">a</span> <span class="o">:</span> <span class="i">equality</span><span class="o">&gt;</span> <span class="k">private</span>(<span onmouseout="hideTip(event, 'fs45', 222)" onmouseover="showTip(event, 'fs45', 222)" class="i">repr</span><span class="o">:</span> <span class="i">Repr</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span>) <span class="o">=</span>
+
+        <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs60', 223)" onmouseover="showTip(event, 'fs60', 223)" class="f">New</span>() <span class="o">=</span> <span class="i">Repr</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 224)" onmouseover="showTip(event, 'fs30', 224)" class="i">New</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs59', 225)" onmouseover="showTip(event, 'fs59', 225)" class="t">Stack3</span>
+
+        <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs61', 226)" onmouseover="showTip(event, 'fs61', 226)" class="f">Push</span>(<span onmouseout="hideTip(event, 'fs49', 227)" onmouseover="showTip(event, 'fs49', 227)" class="i">x</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs31', 228)" onmouseover="showTip(event, 'fs31', 228)" class="p">Push</span>(<span onmouseout="hideTip(event, 'fs49', 229)" onmouseover="showTip(event, 'fs49', 229)" class="i">x</span>, <span onmouseout="hideTip(event, 'fs45', 230)" onmouseover="showTip(event, 'fs45', 230)" class="i">repr</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs59', 231)" onmouseover="showTip(event, 'fs59', 231)" class="t">Stack3</span>
+
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs62', 232)" onmouseover="showTip(event, 'fs62', 232)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs63', 233)" onmouseover="showTip(event, 'fs63', 233)" class="f">Pop</span>() <span class="o">=</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs45', 234)" onmouseover="showTip(event, 'fs45', 234)" class="i">repr</span> <span class="k">with</span>
+            | <span onmouseout="hideTip(event, 'fs30', 235)" onmouseover="showTip(event, 'fs30', 235)" class="p">New</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs30', 236)" onmouseover="showTip(event, 'fs30', 236)" class="p">New</span>
+            | <span onmouseout="hideTip(event, 'fs31', 237)" onmouseover="showTip(event, 'fs31', 237)" class="p">Push</span>(_, <span onmouseout="hideTip(event, 'fs64', 238)" onmouseover="showTip(event, 'fs64', 238)" class="i">s</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs64', 239)" onmouseover="showTip(event, 'fs64', 239)" class="i">s</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs59', 240)" onmouseover="showTip(event, 'fs59', 240)" class="t">Stack3</span>
+
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs62', 241)" onmouseover="showTip(event, 'fs62', 241)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs65', 242)" onmouseover="showTip(event, 'fs65', 242)" class="i">Top</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs6', 243)" onmouseover="showTip(event, 'fs6', 243)" class="t">Option</span> <span class="o">=</span> 
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs45', 244)" onmouseover="showTip(event, 'fs45', 244)" class="i">repr</span> <span class="k">with</span>
+            | <span onmouseout="hideTip(event, 'fs30', 245)" onmouseover="showTip(event, 'fs30', 245)" class="p">New</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs17', 246)" onmouseover="showTip(event, 'fs17', 246)" class="p">None</span>
+            | <span onmouseout="hideTip(event, 'fs31', 247)" onmouseover="showTip(event, 'fs31', 247)" class="p">Push</span>(<span onmouseout="hideTip(event, 'fs49', 248)" onmouseover="showTip(event, 'fs49', 248)" class="i">x</span>, _) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs27', 249)" onmouseover="showTip(event, 'fs27', 249)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs49', 250)" onmouseover="showTip(event, 'fs49', 250)" class="i">x</span>
+            
+        <span class="k">member</span> <span class="k">private</span> <span onmouseout="hideTip(event, 'fs62', 251)" onmouseover="showTip(event, 'fs62', 251)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs66', 252)" onmouseover="showTip(event, 'fs66', 252)" class="i">repr</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs45', 253)" onmouseover="showTip(event, 'fs45', 253)" class="i">repr</span>
+        <span class="k">override</span> <span onmouseout="hideTip(event, 'fs62', 254)" onmouseover="showTip(event, 'fs62', 254)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs67', 255)" onmouseover="showTip(event, 'fs67', 255)" class="f">Equals</span>(<span onmouseout="hideTip(event, 'fs55', 256)" onmouseover="showTip(event, 'fs55', 256)" class="i">obj</span>) <span class="o">=</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs55', 257)" onmouseover="showTip(event, 'fs55', 257)" class="i">obj</span> <span class="k">with</span>
+            | <span class="o">:?</span> <span onmouseout="hideTip(event, 'fs59', 258)" onmouseover="showTip(event, 'fs59', 258)" class="t">Stack3</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span> <span class="k">as</span> <span onmouseout="hideTip(event, 'fs68', 259)" onmouseover="showTip(event, 'fs68', 259)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs68', 260)" onmouseover="showTip(event, 'fs68', 260)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs69', 261)" onmouseover="showTip(event, 'fs69', 261)" class="i">repr</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs70', 262)" onmouseover="showTip(event, 'fs70', 262)" class="f">Equals</span>(<span onmouseout="hideTip(event, 'fs45', 263)" onmouseover="showTip(event, 'fs45', 263)" class="i">repr</span>)
+            | _ <span class="k">-&gt;</span> <span class="k">false</span>
+        <span class="k">override</span> <span onmouseout="hideTip(event, 'fs62', 264)" onmouseover="showTip(event, 'fs62', 264)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs71', 265)" onmouseover="showTip(event, 'fs71', 265)" class="f">GetHashCode</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs45', 266)" onmouseover="showTip(event, 'fs45', 266)" class="i">repr</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs72', 267)" onmouseover="showTip(event, 'fs72', 267)" class="f">GetHashCode</span>()
+</code></pre></td>
+</tr>
+</table>
+<p>Also this implementation just mirrors the axioms, but this is a realistic one.
+If you squint a bit you notice that our final representation type is isomorphic to
+the good old F# (linked) list, which is a reasonable internal representation for a stack.</p>
+<h3>Conclusion</h3>
+<p>to do hint at sufficient completeness, final algebra
+consistency congruence term rewriting equational logic.</p>
+
+
+<div class="tip" id="fs1">abstract member IStack.Push : &#39;a -&gt; IStack&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.IStack`1.Push</div>
+<div class="tip" id="fs2">type IStack&lt;&#39;a&gt; =<br />&#160;&#160;interface<br />&#160;&#160;&#160;&#160;abstract member Pop : unit -&gt; IStack&lt;&#39;a&gt;<br />&#160;&#160;&#160;&#160;abstract member Push : &#39;a -&gt; IStack&lt;&#39;a&gt;<br />&#160;&#160;&#160;&#160;abstract member Top : Option&lt;&#39;a&gt;<br />&#160;&#160;end<br /><br />Full name: 2018-05-22-The lost art of data abstraction.IStack&lt;_&gt;</div>
+<div class="tip" id="fs3">abstract member IStack.Pop : unit -&gt; IStack&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.IStack`1.Pop</div>
+<div class="tip" id="fs4">type unit = Unit<br /><br />Full name: Microsoft.FSharp.Core.unit</div>
+<div class="tip" id="fs5">abstract member IStack.Top : Option&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.IStack`1.Top</div>
+<div class="tip" id="fs6">module Option<br /><br />from Microsoft.FSharp.Core</div>
+<div class="tip" id="fs7">type private DummyRepresentation = | TODO<br /><br />Full name: 2018-05-22-The lost art of data abstraction.DummyRepresentation</div>
+<div class="tip" id="fs8">union case DummyRepresentation.TODO: DummyRepresentation</div>
+<div class="tip" id="fs9">Multiple items<br />type Stack&lt;&#39;a&gt; =<br />&#160;&#160;private new : repr:DummyRepresentation -&gt; Stack&lt;&#39;a&gt;<br />&#160;&#160;member Pop : unit -&gt; Stack&lt;&#39;a&gt;<br />&#160;&#160;member Push : x:&#39;a -&gt; Stack&lt;&#39;a&gt;<br />&#160;&#160;member Top : Option&lt;&#39;a&gt;<br />&#160;&#160;static member New : unit -&gt; Stack&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack&lt;_&gt;<br /><br />--------------------<br />private new : repr:DummyRepresentation -&gt; Stack&lt;&#39;a&gt;</div>
+<div class="tip" id="fs10">val repr : DummyRepresentation</div>
+<div class="tip" id="fs11">static member Stack.New : unit -&gt; Stack&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack`1.New</div>
+<div class="tip" id="fs12">member Stack.Push : x:&#39;a -&gt; Stack&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack`1.Push</div>
+<div class="tip" id="fs13">val x : &#39;a</div>
+<div class="tip" id="fs14">val __ : Stack&lt;&#39;a&gt;</div>
+<div class="tip" id="fs15">member Stack.Pop : unit -&gt; Stack&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack`1.Pop</div>
+<div class="tip" id="fs16">member Stack.Top : Option&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack`1.Top</div>
+<div class="tip" id="fs17">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs18">val axiom1 : unit -&gt; bool<br /><br />Full name: 2018-05-22-The lost art of data abstraction.axiom1</div>
+<div class="tip" id="fs19">type Stack&lt;&#39;a&gt; =<br />&#160;&#160;private new : repr:DummyRepresentation -&gt; Stack&lt;&#39;a&gt;<br />&#160;&#160;member Pop : unit -&gt; Stack&lt;&#39;a&gt;<br />&#160;&#160;member Push : x:&#39;a -&gt; Stack&lt;&#39;a&gt;<br />&#160;&#160;member Top : Option&lt;&#39;a&gt;<br />&#160;&#160;static member New : unit -&gt; Stack&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack&lt;_&gt;</div>
+<div class="tip" id="fs20">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs21">val axiom2 : unit -&gt; bool<br /><br />Full name: 2018-05-22-The lost art of data abstraction.axiom2</div>
+<div class="tip" id="fs22">val axiom3 : s:Stack&lt;int&gt; -&gt; x:int -&gt; bool<br /><br />Full name: 2018-05-22-The lost art of data abstraction.axiom3</div>
+<div class="tip" id="fs23">val s : Stack&lt;int&gt;</div>
+<div class="tip" id="fs24">val x : int</div>
+<div class="tip" id="fs25">member Stack.Push : x:&#39;a -&gt; Stack&lt;&#39;a&gt;</div>
+<div class="tip" id="fs26">val axiom4 : s:Stack&lt;int&gt; -&gt; x:int -&gt; bool<br /><br />Full name: 2018-05-22-The lost art of data abstraction.axiom4</div>
+<div class="tip" id="fs27">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs28">type obj = System.Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+<div class="tip" id="fs29">type StackTerm&lt;&#39;a&gt; =<br />&#160;&#160;| New<br />&#160;&#160;| Push of &#39;a * StackTerm&lt;&#39;a&gt;<br />&#160;&#160;| Pop of StackTerm&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.StackTerm&lt;_&gt;</div>
+<div class="tip" id="fs30">union case StackTerm.New: StackTerm&lt;&#39;a&gt;</div>
+<div class="tip" id="fs31">union case StackTerm.Push: &#39;a * StackTerm&lt;&#39;a&gt; -&gt; StackTerm&lt;&#39;a&gt;</div>
+<div class="tip" id="fs32">union case StackTerm.Pop: StackTerm&lt;&#39;a&gt; -&gt; StackTerm&lt;&#39;a&gt;</div>
+<div class="tip" id="fs33">val stack : term:StackTerm&lt;&#39;a&gt; -&gt; Stack&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.stack</div>
+<div class="tip" id="fs34">val term : StackTerm&lt;&#39;a&gt;</div>
+<div class="tip" id="fs35">static member Stack.New : unit -&gt; Stack&lt;&#39;a&gt;</div>
+<div class="tip" id="fs36">val s : StackTerm&lt;&#39;a&gt;</div>
+<div class="tip" id="fs37">val term1 : StackTerm&lt;int&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.term1</div>
+<div class="tip" id="fs38">val stack1 : Stack&lt;int&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.stack1</div>
+<div class="tip" id="fs39">val axiom0 : s:StackTerm&lt;int&gt; -&gt; bool<br /><br />Full name: 2018-05-22-The lost art of data abstraction.axiom0</div>
+<div class="tip" id="fs40">val s : StackTerm&lt;int&gt;</div>
+<div class="tip" id="fs41">val axiom3 : s:StackTerm&lt;int&gt; -&gt; x:int -&gt; bool<br /><br />Full name: 2018-05-22-The lost art of data abstraction.axiom3</div>
+<div class="tip" id="fs42">val s&#39; : Stack&lt;int&gt;</div>
+<div class="tip" id="fs43">val axiom4 : s:StackTerm&lt;int&gt; -&gt; x:int -&gt; bool<br /><br />Full name: 2018-05-22-The lost art of data abstraction.axiom4</div>
+<div class="tip" id="fs44">Multiple items<br />type Stack2&lt;&#39;a (requires equality)&gt; =<br />&#160;&#160;private new : repr:StackTerm&lt;&#39;a&gt; -&gt; Stack2&lt;&#39;a&gt;<br />&#160;&#160;override Equals : obj:obj -&gt; bool<br />&#160;&#160;override GetHashCode : unit -&gt; int<br />&#160;&#160;member Pop : unit -&gt; Stack2&lt;&#39;a&gt;<br />&#160;&#160;member Push : x:&#39;a -&gt; Stack2&lt;&#39;a&gt;<br />&#160;&#160;member Top : Option&lt;&#39;a&gt;<br />&#160;&#160;member private repr : StackTerm&lt;&#39;a&gt;<br />&#160;&#160;static member New : unit -&gt; Stack2&lt;&#39;a0&gt; (requires equality)<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack2&lt;_&gt;<br /><br />--------------------<br />private new : repr:StackTerm&lt;&#39;a&gt; -&gt; Stack2&lt;&#39;a&gt;</div>
+<div class="tip" id="fs45">val repr : StackTerm&lt;&#39;a&gt; (requires equality)</div>
+<div class="tip" id="fs46">val reduce : (StackTerm&lt;&#39;a&gt; -&gt; StackTerm&lt;&#39;a&gt;)</div>
+<div class="tip" id="fs47">static member Stack2.New : unit -&gt; Stack2&lt;&#39;a0&gt; (requires equality)<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack2`1.New</div>
+<div class="tip" id="fs48">member Stack2.Push : x:&#39;a -&gt; Stack2&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack2`1.Push</div>
+<div class="tip" id="fs49">val x : &#39;a (requires equality)</div>
+<div class="tip" id="fs50">val __ : Stack2&lt;&#39;a&gt; (requires equality)</div>
+<div class="tip" id="fs51">member Stack2.Pop : unit -&gt; Stack2&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack2`1.Pop</div>
+<div class="tip" id="fs52">member Stack2.Top : Option&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack2`1.Top</div>
+<div class="tip" id="fs53">member private Stack2.repr : StackTerm&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack2`1.repr</div>
+<div class="tip" id="fs54">override Stack2.Equals : obj:obj -&gt; bool<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack2`1.Equals</div>
+<div class="tip" id="fs55">Multiple items<br />val obj : obj<br /><br />--------------------<br />type obj = System.Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+<div class="tip" id="fs56">val x : Stack2&lt;&#39;a&gt; (requires equality)</div>
+<div class="tip" id="fs57">property Stack2.repr: StackTerm&lt;&#39;a&gt;</div>
+<div class="tip" id="fs58">override Stack2.GetHashCode : unit -&gt; int<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack2`1.GetHashCode</div>
+<div class="tip" id="fs59">Multiple items<br />type Stack3&lt;&#39;a (requires equality)&gt; =<br />&#160;&#160;private new : repr:StackTerm&lt;&#39;a&gt; -&gt; Stack3&lt;&#39;a&gt;<br />&#160;&#160;override Equals : obj:obj -&gt; bool<br />&#160;&#160;override GetHashCode : unit -&gt; int<br />&#160;&#160;member Pop : unit -&gt; Stack3&lt;&#39;a&gt;<br />&#160;&#160;member Push : x:&#39;a -&gt; Stack3&lt;&#39;a&gt;<br />&#160;&#160;member Top : Option&lt;&#39;a&gt;<br />&#160;&#160;member private repr : StackTerm&lt;&#39;a&gt;<br />&#160;&#160;static member New : unit -&gt; Stack3&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack3&lt;_&gt;<br /><br />--------------------<br />private new : repr:StackTerm&lt;&#39;a&gt; -&gt; Stack3&lt;&#39;a&gt;</div>
+<div class="tip" id="fs60">static member Stack3.New : unit -&gt; Stack3&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack3`1.New</div>
+<div class="tip" id="fs61">member Stack3.Push : x:&#39;a -&gt; Stack3&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack3`1.Push</div>
+<div class="tip" id="fs62">val __ : Stack3&lt;&#39;a&gt; (requires equality)</div>
+<div class="tip" id="fs63">member Stack3.Pop : unit -&gt; Stack3&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack3`1.Pop</div>
+<div class="tip" id="fs64">val s : StackTerm&lt;&#39;a&gt; (requires equality)</div>
+<div class="tip" id="fs65">member Stack3.Top : Option&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack3`1.Top</div>
+<div class="tip" id="fs66">member private Stack3.repr : StackTerm&lt;&#39;a&gt;<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack3`1.repr</div>
+<div class="tip" id="fs67">override Stack3.Equals : obj:obj -&gt; bool<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack3`1.Equals</div>
+<div class="tip" id="fs68">val x : Stack3&lt;&#39;a&gt; (requires equality)</div>
+<div class="tip" id="fs69">property Stack3.repr: StackTerm&lt;&#39;a&gt;</div>
+<div class="tip" id="fs70">System.Object.Equals(obj: obj) : bool</div>
+<div class="tip" id="fs71">override Stack3.GetHashCode : unit -&gt; int<br /><br />Full name: 2018-05-22-The lost art of data abstraction.Stack3`1.GetHashCode</div>
+<div class="tip" id="fs72">System.Object.GetHashCode() : int</div>
