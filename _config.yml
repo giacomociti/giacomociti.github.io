@@ -45,9 +45,9 @@ plugins:
 exclude:
     - Gemfile
     - Gemfile.lock
-    - fsx
     - build.fsx
     - template.html
     - paket.lock
     - paket.dependencies
-    - packages
+    - fsx/
+    - packages/

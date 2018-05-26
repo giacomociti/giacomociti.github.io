@@ -43,6 +43,7 @@ abstract data type.
 *)
 
 (*** hide ***)
+#r "../packages/FsCheck/lib/net452/FsCheck.dll"
 module Module1 =
 
 (**
@@ -108,13 +109,13 @@ but any type will do):
     let axiom4 (s: Stack<int>) x =
         s.Push(x).Top = Some x
 
-    //#r "FsCheck.dll"
-    //open FsCheck
+    
+    open FsCheck
 
-    //Check.Quick axiom1
-    //Check.Quick axiom2
-    //Check.Quick axiom3
-    //Check.Quick axiom4
+    Check.Quick axiom1
+    Check.Quick axiom2
+    Check.Quick axiom3
+    Check.Quick axiom4
 
 (**
 The meaning of the axioms is fairly readable:
@@ -282,7 +283,7 @@ this relation. This theoretical model is a sort of reference
 implementation (quotient term algebra) and this approach (initial
 algebra) has strong connections with category theory (so it has to
 be fancy!). There is also the dual approach of final algebra, where
-two terms are considered equivalent _unless_ the axioms don't allow
+two terms are considered equivalent _unless_ the axioms forbid
 it. There's a lot of beautiful theory behind abstract data types.
 *)
 
@@ -293,7 +294,7 @@ module Module5 =
 (**
 ### Canonical Constructors
 The key insight to improve the implementation is nicely explained
-[here][JAX]. The idea is to identify _canonical_constructors,
+[here][JAX]. The idea is to identify _canonical_ constructors,
 the ones intuitively sufficient to construct all values. In our
 example `New` and `Push` are enough because every stack involving
 `Pop` can be expressed in a simpler form using only `New` and
@@ -354,8 +355,8 @@ representation type is isomorphic to the good old F# (linked) list,
 which is in fact a reasonable internal representation for a stack.
 
 ### Conclusion
-The purpose of this post is to present a few old and nice concepts
-about data abstraction. I'm not claiming that specifying and
+The purpose of this post is to present a few old but interesting
+concepts about data abstraction. I'm not claiming that specifying and
 implementing an ADT is always as nice and simple as in the stack
 example, nor I'm advocating formal methods; but I think these ideas
 may still provide a useful intellectual guideline.
