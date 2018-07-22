@@ -5,3 +5,8 @@
 table.pre td {
   border: 0px;
 }
+
+table.pre pre {
+  color: inherit;
+  background-color: inherit;
+}

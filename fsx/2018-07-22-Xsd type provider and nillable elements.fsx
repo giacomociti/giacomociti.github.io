@@ -70,17 +70,21 @@ let xml2 = """
     <born>1902</born>
 </author>"""
 (**
-we can check their validity (and see that `xml2` lacks the `name` element):
+we can check their validity:
 *)
+(*** define-output:validate ***)
 let validateAuthor = AuthorXsd |> parseSchema |> validator
 
-(*** define-output:validate1 ***)
 validateAuthor xml1
-(*** include-it:validate1 ***)
+|> printfn "validation result for xml1: %A"
 
-(*** define-output:validate2 ***)
 validateAuthor xml2
-(*** include-it:validate2 ***)
+|> printfn "validation result for xml2: %A"
+(**
+and see that `xml2` lacks the `name` element:
+*)
+(*** include-output:validate ***)
+
 
 (*** hide ***)
 #r "System.Xml.Linq"
@@ -99,10 +103,10 @@ let author = AuthorXsd.Parse xml1
 printfn "%A" (author.Name, author.Born)
 
 (**
-Beware that no validation is performed, in fact also `xml2` could
+Beware that no validation is performed; in fact, also `xml2` could
 be parsed, albeit accessing the `Name` property would cause an exception.
 If you need to validate your input you have to do it yourself
-using code like in the above validation snippet, which is useful anyway:
+using code like the above validation snippet, which is useful anyway:
 whenever the type provider behaves unexpectedly, first check whether the input
 is valid.
 
@@ -119,7 +123,7 @@ although it was declared nillable.
 
 Declaring a nillable element is a weird way to specify that its value
 is not mandatory. A much simpler and more common alternative is to rely
-on `minOccurs` and `maxOccurs` to specify the allowed number of elements.
+on `minOccurs` and `maxOccurs` to constrain the allowed number of elements.
 But in case you stumble across a schema with nillable elements,
 you need to be aware that valid documents look like this:
 *)
@@ -162,16 +166,16 @@ printfn "%A" (author.Born.Nil, author.Born.Value)
 (*** include-output:printBorn ***)
 
 (**
-For valid elements if `Nil = Some true` then `Value = None`.
+For valid elements if `Nil = Some true`, then `Value = None`.
 The converse does not hold in general: for certain data types like
 `xs:string` that admit empty content, it is possible to have `Value = None`
 even if `Nil = Some false` or `Nil = None`; in fact the `nil` attribute
-helps disambiguate subleties about the lack of a value: the value
+helps disambiguate subtleties about the lack of a value: the value
 was not entered *vs* the value *NULL* was entered (can you feel the smell of
 the billion dollar mistake?).
 
 In practice, when reading XML, you mostly rely on `Value` and ignore `Nil`.
-When using the type provider to write XML, on the other hand, you need 
+When you use the type provider to write XML, on the other hand, you need 
 to pass appropriate values in order to obtain a valid document:
 *)
 

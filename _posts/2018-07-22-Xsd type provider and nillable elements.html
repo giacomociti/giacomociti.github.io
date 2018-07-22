@@ -122,27 +122,28 @@ We will use the following handy snippet:</p>
 </code></pre></td>
 </tr>
 </table>
-<p>we can check their validity (and see that <code>xml2</code> lacks the <code>name</code> element):</p>
+<p>we can check their validity:</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs37', 68)" onmouseover="showTip(event, 'fs37', 68)" class="f">validateAuthor</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs34', 69)" onmouseover="showTip(event, 'fs34', 69)" class="i">AuthorXsd</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 70)" onmouseover="showTip(event, 'fs12', 70)" class="f">parseSchema</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs20', 71)" onmouseover="showTip(event, 'fs20', 71)" class="f">validator</span>
+
+<span onmouseout="hideTip(event, 'fs37', 72)" onmouseover="showTip(event, 'fs37', 72)" class="f">validateAuthor</span> <span onmouseout="hideTip(event, 'fs35', 73)" onmouseover="showTip(event, 'fs35', 73)" class="i">xml1</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs38', 74)" onmouseover="showTip(event, 'fs38', 74)" class="f">printfn</span> <span class="s">&quot;validation result for xml1: </span><span class="pf">%A</span><span class="s">&quot;</span>
+
+<span onmouseout="hideTip(event, 'fs37', 75)" onmouseover="showTip(event, 'fs37', 75)" class="f">validateAuthor</span> <span onmouseout="hideTip(event, 'fs36', 76)" onmouseover="showTip(event, 'fs36', 76)" class="i">xml2</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs38', 77)" onmouseover="showTip(event, 'fs38', 77)" class="f">printfn</span> <span class="s">&quot;validation result for xml2: </span><span class="pf">%A</span><span class="s">&quot;</span>
 </code></pre></td>
 </tr>
 </table>
-<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
-</pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span onmouseout="hideTip(event, 'fs37', 72)" onmouseover="showTip(event, 'fs37', 72)" class="f">validateAuthor</span> <span onmouseout="hideTip(event, 'fs35', 73)" onmouseover="showTip(event, 'fs35', 73)" class="i">xml1</span>
-</code></pre></td>
-</tr>
-</table>
-<table class="pre"><tr><td><pre><code>Ok ()</code></pre></td></tr></table>
-<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
-</pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span onmouseout="hideTip(event, 'fs37', 74)" onmouseover="showTip(event, 'fs37', 74)" class="f">validateAuthor</span> <span onmouseout="hideTip(event, 'fs36', 75)" onmouseover="showTip(event, 'fs36', 75)" class="i">xml2</span>
-</code></pre></td>
-</tr>
-</table>
-<table class="pre"><tr><td><pre><code>Error
+<p>and see that <code>xml2</code> lacks the <code>name</code> element:</p>
+<table class="pre"><tr><td><pre><code>validation result for xml1: Ok ()
+validation result for xml2: Error
   "The element 'author' has invalid child element 'born'. List of possible elements expected: 'name'."</code></pre></td></tr></table>
 <h2>Type Provider</h2>
 <p>The XML Type Provider can be used with the <code>Schema</code> parameter,
@@ -154,25 +155,25 @@ generating a type with <code>Name</code> and <code>Born</code> properties.</p>
 <span class="l">5: </span>
 <span class="l">6: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs38', 76)" onmouseover="showTip(event, 'fs38', 76)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 77)" onmouseover="showTip(event, 'fs39', 77)" class="i">Data</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs39', 78)" onmouseover="showTip(event, 'fs39', 78)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 79)" onmouseover="showTip(event, 'fs40', 79)" class="i">Data</span>
 
-<span class="k">type</span> <span onmouseout="hideTip(event, 'fs40', 78)" onmouseover="showTip(event, 'fs40', 78)" class="t">AuthorXsd</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs41', 79)" onmouseover="showTip(event, 'fs41', 79)" class="t">XmlProvider</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs3', 80)" onmouseover="showTip(event, 'fs3', 80)" class="i">Schema</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs40', 81)" onmouseover="showTip(event, 'fs40', 81)" class="i">AuthorXsd</span><span class="o">&gt;</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs41', 80)" onmouseover="showTip(event, 'fs41', 80)" class="t">AuthorXsd</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs42', 81)" onmouseover="showTip(event, 'fs42', 81)" class="t">XmlProvider</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs3', 82)" onmouseover="showTip(event, 'fs3', 82)" class="i">Schema</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs41', 83)" onmouseover="showTip(event, 'fs41', 83)" class="i">AuthorXsd</span><span class="o">&gt;</span>
 
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs42', 82)" onmouseover="showTip(event, 'fs42', 82)" class="i">author</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs40', 83)" onmouseover="showTip(event, 'fs40', 83)" class="t">AuthorXsd</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs43', 84)" onmouseover="showTip(event, 'fs43', 84)" class="f">Parse</span> <span onmouseout="hideTip(event, 'fs35', 85)" onmouseover="showTip(event, 'fs35', 85)" class="i">xml1</span>
-<span onmouseout="hideTip(event, 'fs44', 86)" onmouseover="showTip(event, 'fs44', 86)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs42', 87)" onmouseover="showTip(event, 'fs42', 87)" class="i">author</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 88)" onmouseover="showTip(event, 'fs45', 88)" class="i">Name</span>, <span onmouseout="hideTip(event, 'fs42', 89)" onmouseover="showTip(event, 'fs42', 89)" class="i">author</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 90)" onmouseover="showTip(event, 'fs46', 90)" class="i">Born</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs43', 84)" onmouseover="showTip(event, 'fs43', 84)" class="i">author</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs41', 85)" onmouseover="showTip(event, 'fs41', 85)" class="t">AuthorXsd</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 86)" onmouseover="showTip(event, 'fs44', 86)" class="f">Parse</span> <span onmouseout="hideTip(event, 'fs35', 87)" onmouseover="showTip(event, 'fs35', 87)" class="i">xml1</span>
+<span onmouseout="hideTip(event, 'fs38', 88)" onmouseover="showTip(event, 'fs38', 88)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs43', 89)" onmouseover="showTip(event, 'fs43', 89)" class="i">author</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 90)" onmouseover="showTip(event, 'fs45', 90)" class="i">Name</span>, <span onmouseout="hideTip(event, 'fs43', 91)" onmouseover="showTip(event, 'fs43', 91)" class="i">author</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 92)" onmouseover="showTip(event, 'fs46', 92)" class="i">Born</span>)
 </code></pre></td>
 </tr>
 </table>
-<p>Beware that no validation is performed, in fact also <code>xml2</code> could
+<p>Beware that no validation is performed; in fact, also <code>xml2</code> could
 be parsed, albeit accessing the <code>Name</code> property would cause an exception.
 If you need to validate your input you have to do it yourself
-using code like in the above validation snippet, which is useful anyway:
+using code like the above validation snippet, which is useful anyway:
 whenever the type provider behaves unexpectedly, first check whether the input
 is valid.</p>
 <p>You may be surprised, for example, that the following document is invalid:</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span onmouseout="hideTip(event, 'fs37', 91)" onmouseover="showTip(event, 'fs37', 91)" class="f">validateAuthor</span> <span class="s">&quot;&lt;author&gt;&lt;name&gt;Karl Popper&lt;/name&gt;&lt;/author&gt;&quot;</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span onmouseout="hideTip(event, 'fs37', 93)" onmouseover="showTip(event, 'fs37', 93)" class="f">validateAuthor</span> <span class="s">&quot;&lt;author&gt;&lt;name&gt;Karl Popper&lt;/name&gt;&lt;/author&gt;&quot;</span>
 </code></pre></td>
 </tr>
 </table>
@@ -183,7 +184,7 @@ is valid.</p>
 although it was declared nillable.</p>
 <p>Declaring a nillable element is a weird way to specify that its value
 is not mandatory. A much simpler and more common alternative is to rely
-on <code>minOccurs</code> and <code>maxOccurs</code> to specify the allowed number of elements.
+on <code>minOccurs</code> and <code>maxOccurs</code> to constrain the allowed number of elements.
 But in case you stumble across a schema with nillable elements,
 you need to be aware that valid documents look like this:</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
@@ -198,7 +199,7 @@ you need to be aware that valid documents look like this:</p>
 <span class="s">    &lt;name&gt;Karl Popper&lt;/name&gt;</span>
 <span class="s">    &lt;born xsi:nil=&quot;true&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; /&gt;</span>
 <span class="s">&lt;/author&gt;&quot;&quot;&quot;</span>
-<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs37', 92)" onmouseover="showTip(event, 'fs37', 92)" class="f">validateAuthor</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs37', 94)" onmouseover="showTip(event, 'fs37', 94)" class="f">validateAuthor</span>
 </code></pre></td>
 </tr>
 </table>
@@ -225,7 +226,7 @@ attribute is false (or is simply omitted like in <code>xml1</code>):</p>
 <span class="s">        1902</span>
 <span class="s">    &lt;/born&gt;</span>
 <span class="s">&lt;/author&gt;&quot;&quot;&quot;</span>
-<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs37', 93)" onmouseover="showTip(event, 'fs37', 93)" class="f">validateAuthor</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs37', 95)" onmouseover="showTip(event, 'fs37', 95)" class="f">validateAuthor</span>
 </code></pre></td>
 </tr>
 </table>
@@ -234,28 +235,28 @@ attribute is false (or is simply omitted like in <code>xml1</code>):</p>
 optional properties (<code>Nil</code> and <code>Value</code>).</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span onmouseout="hideTip(event, 'fs44', 94)" onmouseover="showTip(event, 'fs44', 94)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs42', 95)" onmouseover="showTip(event, 'fs42', 95)" class="i">author</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 96)" onmouseover="showTip(event, 'fs46', 96)" class="i">Born</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 97)" onmouseover="showTip(event, 'fs47', 97)" class="i">Nil</span>, <span onmouseout="hideTip(event, 'fs42', 98)" onmouseover="showTip(event, 'fs42', 98)" class="i">author</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 99)" onmouseover="showTip(event, 'fs46', 99)" class="i">Born</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 100)" onmouseover="showTip(event, 'fs48', 100)" class="i">Value</span>)
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span onmouseout="hideTip(event, 'fs38', 96)" onmouseover="showTip(event, 'fs38', 96)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs43', 97)" onmouseover="showTip(event, 'fs43', 97)" class="i">author</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 98)" onmouseover="showTip(event, 'fs46', 98)" class="i">Born</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 99)" onmouseover="showTip(event, 'fs47', 99)" class="i">Nil</span>, <span onmouseout="hideTip(event, 'fs43', 100)" onmouseover="showTip(event, 'fs43', 100)" class="i">author</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 101)" onmouseover="showTip(event, 'fs46', 101)" class="i">Born</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 102)" onmouseover="showTip(event, 'fs48', 102)" class="i">Value</span>)
 </code></pre></td>
 </tr>
 </table>
 <table class="pre"><tr><td><pre><code>(None, Some 1902)</code></pre></td></tr></table>
-<p>For valid elements if <code>Nil = Some true</code> then <code>Value = None</code>.
+<p>For valid elements if <code>Nil = Some true</code>, then <code>Value = None</code>.
 The converse does not hold in general: for certain data types like
 <code>xs:string</code> that admit empty content, it is possible to have <code>Value = None</code>
 even if <code>Nil = Some false</code> or <code>Nil = None</code>; in fact the <code>nil</code> attribute
-helps disambiguate subleties about the lack of a value: the value
+helps disambiguate subtleties about the lack of a value: the value
 was not entered <em>vs</em> the value <em>NULL</em> was entered (can you feel the smell of
 the billion dollar mistake?).</p>
 <p>In practice, when reading XML, you mostly rely on <code>Value</code> and ignore <code>Nil</code>.
-When using the type provider to write XML, on the other hand, you need
+When you use the type provider to write XML, on the other hand, you need
 to pass appropriate values in order to obtain a valid document:</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
 <span class="l">2: </span>
 <span class="l">3: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span onmouseout="hideTip(event, 'fs40', 101)" onmouseover="showTip(event, 'fs40', 101)" class="t">AuthorXsd</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 102)" onmouseover="showTip(event, 'fs49', 102)" class="t">Author</span>(<span class="i">name</span> <span class="o">=</span> <span class="s">&quot;Karl Popper&quot;</span>,
-                 <span class="i">born</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs40', 103)" onmouseover="showTip(event, 'fs40', 103)" class="t">AuthorXsd</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs50', 104)" onmouseover="showTip(event, 'fs50', 104)" class="t">Born</span>(<span class="i">nil</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs51', 105)" onmouseover="showTip(event, 'fs51', 105)" class="p">Some</span> <span class="k">true</span>, <span class="i">value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs52', 106)" onmouseover="showTip(event, 'fs52', 106)" class="p">None</span>))
-<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs44', 107)" onmouseover="showTip(event, 'fs44', 107)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span onmouseout="hideTip(event, 'fs41', 103)" onmouseover="showTip(event, 'fs41', 103)" class="t">AuthorXsd</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 104)" onmouseover="showTip(event, 'fs49', 104)" class="t">Author</span>(<span class="i">name</span> <span class="o">=</span> <span class="s">&quot;Karl Popper&quot;</span>,
+                 <span class="i">born</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs41', 105)" onmouseover="showTip(event, 'fs41', 105)" class="t">AuthorXsd</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs50', 106)" onmouseover="showTip(event, 'fs50', 106)" class="t">Born</span>(<span class="i">nil</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs51', 107)" onmouseover="showTip(event, 'fs51', 107)" class="p">Some</span> <span class="k">true</span>, <span class="i">value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs52', 108)" onmouseover="showTip(event, 'fs52', 108)" class="p">None</span>))
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs38', 109)" onmouseover="showTip(event, 'fs38', 109)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span>
 </code></pre></td>
 </tr>
 </table>
@@ -268,7 +269,7 @@ to pass appropriate values in order to obtain a valid document:</p>
 <div class="tip" id="fs1">namespace System</div>
 <div class="tip" id="fs2">namespace System.Xml</div>
 <div class="tip" id="fs3">namespace System.Xml.Schema</div>
-<div class="tip" id="fs4">val createSchema : xmlReader:XmlReader -&gt; XmlSchemaSet<br /><br />Full name: 2018-07-20-Xsd type provider and nillable elements.createSchema</div>
+<div class="tip" id="fs4">val createSchema : xmlReader:XmlReader -&gt; XmlSchemaSet<br /><br />Full name: 2018-07-22-Xsd type provider and nillable elements.createSchema</div>
 <div class="tip" id="fs5">val xmlReader : XmlReader</div>
 <div class="tip" id="fs6">type XmlReader =<br />&#160;&#160;member AttributeCount : int<br />&#160;&#160;member BaseURI : string<br />&#160;&#160;member CanReadBinaryContent : bool<br />&#160;&#160;member CanReadValueChunk : bool<br />&#160;&#160;member CanResolveEntity : bool<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member Depth : int<br />&#160;&#160;member Dispose : unit -&gt; unit<br />&#160;&#160;member EOF : bool<br />&#160;&#160;member GetAttribute : name:string -&gt; string + 2 overloads<br />&#160;&#160;...<br /><br />Full name: System.Xml.XmlReader</div>
 <div class="tip" id="fs7">val schemaSet : XmlSchemaSet</div>
@@ -276,15 +277,15 @@ to pass appropriate values in order to obtain a valid document:</p>
 <div class="tip" id="fs9">XmlSchemaSet.Add(schema: XmlSchema) : XmlSchema<br />XmlSchemaSet.Add(schemas: XmlSchemaSet) : unit<br />XmlSchemaSet.Add(targetNamespace: string, schemaDocument: XmlReader) : XmlSchema<br />XmlSchemaSet.Add(targetNamespace: string, schemaUri: string) : XmlSchema</div>
 <div class="tip" id="fs10">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
 <div class="tip" id="fs11">XmlSchemaSet.Compile() : unit</div>
-<div class="tip" id="fs12">val parseSchema : xsdText:string -&gt; XmlSchemaSet<br /><br />Full name: 2018-07-20-Xsd type provider and nillable elements.parseSchema</div>
+<div class="tip" id="fs12">val parseSchema : xsdText:string -&gt; XmlSchemaSet<br /><br />Full name: 2018-07-22-Xsd type provider and nillable elements.parseSchema</div>
 <div class="tip" id="fs13">val xsdText : string</div>
 <div class="tip" id="fs14">val reader : XmlReader</div>
 <div class="tip" id="fs15">XmlReader.Create(input: System.IO.TextReader) : XmlReader<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />XmlReader.Create(input: System.IO.Stream) : XmlReader<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />XmlReader.Create(inputUri: string) : XmlReader<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />XmlReader.Create(reader: XmlReader, settings: XmlReaderSettings) : XmlReader<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />XmlReader.Create(input: System.IO.TextReader, settings: XmlReaderSettings) : XmlReader<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />XmlReader.Create(input: System.IO.Stream, settings: XmlReaderSettings) : XmlReader<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />XmlReader.Create(inputUri: string, settings: XmlReaderSettings) : XmlReader<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />XmlReader.Create(input: System.IO.TextReader, settings: XmlReaderSettings, inputContext: XmlParserContext) : XmlReader<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />XmlReader.Create(input: System.IO.TextReader, settings: XmlReaderSettings, baseUri: string) : XmlReader<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />XmlReader.Create(input: System.IO.Stream, settings: XmlReaderSettings, inputContext: XmlParserContext) : XmlReader<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
 <div class="tip" id="fs16">namespace System.IO</div>
 <div class="tip" id="fs17">Multiple items<br />type StringReader =<br />&#160;&#160;inherit TextReader<br />&#160;&#160;new : s:string -&gt; StringReader<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member Peek : unit -&gt; int<br />&#160;&#160;member Read : unit -&gt; int + 1 overload<br />&#160;&#160;member ReadAsync : buffer:char[] * index:int * count:int -&gt; Task&lt;int&gt;<br />&#160;&#160;member ReadBlockAsync : buffer:char[] * index:int * count:int -&gt; Task&lt;int&gt;<br />&#160;&#160;member ReadLine : unit -&gt; string<br />&#160;&#160;member ReadLineAsync : unit -&gt; Task&lt;string&gt;<br />&#160;&#160;member ReadToEnd : unit -&gt; string<br />&#160;&#160;member ReadToEndAsync : unit -&gt; Task&lt;string&gt;<br /><br />Full name: System.IO.StringReader<br /><br />--------------------<br />System.IO.StringReader(s: string) : unit</div>
-<div class="tip" id="fs18">val loadSchema : xsdFile:string -&gt; XmlSchemaSet<br /><br />Full name: 2018-07-20-Xsd type provider and nillable elements.loadSchema</div>
+<div class="tip" id="fs18">val loadSchema : xsdFile:string -&gt; XmlSchemaSet<br /><br />Full name: 2018-07-22-Xsd type provider and nillable elements.loadSchema</div>
 <div class="tip" id="fs19">val xsdFile : string</div>
-<div class="tip" id="fs20">val validator : schemaSet:XmlSchemaSet -&gt; xml:string -&gt; Result&lt;unit,string&gt;<br /><br />Full name: 2018-07-20-Xsd type provider and nillable elements.validator</div>
+<div class="tip" id="fs20">val validator : schemaSet:XmlSchemaSet -&gt; xml:string -&gt; Result&lt;unit,string&gt;<br /><br />Full name: 2018-07-22-Xsd type provider and nillable elements.validator</div>
 <div class="tip" id="fs21">val xml : string</div>
 <div class="tip" id="fs22">val settings : XmlReaderSettings</div>
 <div class="tip" id="fs23">Multiple items<br />type XmlReaderSettings =<br />&#160;&#160;new : unit -&gt; XmlReaderSettings + 1 overload<br />&#160;&#160;member Async : bool with get, set<br />&#160;&#160;member CheckCharacters : bool with get, set<br />&#160;&#160;member Clone : unit -&gt; XmlReaderSettings<br />&#160;&#160;member CloseInput : bool with get, set<br />&#160;&#160;member ConformanceLevel : ConformanceLevel with get, set<br />&#160;&#160;member DtdProcessing : DtdProcessing with get, set<br />&#160;&#160;member IgnoreComments : bool with get, set<br />&#160;&#160;member IgnoreProcessingInstructions : bool with get, set<br />&#160;&#160;member IgnoreWhitespace : bool with get, set<br />&#160;&#160;...<br /><br />Full name: System.Xml.XmlReaderSettings<br /><br />--------------------<br />XmlReaderSettings() : unit</div>
@@ -298,17 +299,17 @@ to pass appropriate values in order to obtain a valid document:</p>
 <div class="tip" id="fs31">union case Result.Error: ErrorValue: &#39;TError -&gt; Result&lt;&#39;T,&#39;TError&gt;</div>
 <div class="tip" id="fs32">property XmlSchemaException.Message: string</div>
 <div class="tip" id="fs33">Multiple items<br />type LiteralAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; LiteralAttribute<br /><br />Full name: Microsoft.FSharp.Core.LiteralAttribute<br /><br />--------------------<br />new : unit -&gt; LiteralAttribute</div>
-<div class="tip" id="fs34">val AuthorXsd : string<br /><br />Full name: 2018-07-20-Xsd type provider and nillable elements.AuthorXsd</div>
-<div class="tip" id="fs35">val xml1 : string<br /><br />Full name: 2018-07-20-Xsd type provider and nillable elements.xml1</div>
-<div class="tip" id="fs36">val xml2 : string<br /><br />Full name: 2018-07-20-Xsd type provider and nillable elements.xml2</div>
-<div class="tip" id="fs37">val validateAuthor : (string -&gt; Result&lt;unit,string&gt;)<br /><br />Full name: 2018-07-20-Xsd type provider and nillable elements.validateAuthor</div>
-<div class="tip" id="fs38">Multiple items<br />namespace FSharp<br /><br />--------------------<br />namespace Microsoft.FSharp</div>
-<div class="tip" id="fs39">Multiple items<br />namespace FSharp.Data<br /><br />--------------------<br />namespace Microsoft.FSharp.Data</div>
-<div class="tip" id="fs40">type AuthorXsd = XmlProvider&lt;...&gt;<br /><br />Full name: 2018-07-20-Xsd type provider and nillable elements.AuthorXsd</div>
-<div class="tip" id="fs41">type XmlProvider<br /><br />Full name: FSharp.Data.XmlProvider<br /><em><br /><br />&lt;summary&gt;Typed representation of a XML file.&lt;/summary&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Sample&#39;&gt;Location of a XML sample file or a string containing a sample XML document.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;SampleIsList&#39;&gt;If true, the children of the root in the sample document represent individual samples for the inference.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Global&#39;&gt;If true, the inference unifies all XML elements with the same name.&lt;/param&gt;                     <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Culture&#39;&gt;The culture used for parsing numbers and dates. Defaults to the invariant culture.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Encoding&#39;&gt;The encoding used to read the sample. You can specify either the character set name or the codepage number. Defaults to UTF8 for files, and to ISO-8859-1 the for HTTP requests, unless `charset` is specified in the `Content-Type` response header.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;ResolutionFolder&#39;&gt;A directory that is used when resolving relative file references (at design time and in hosted execution).&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;EmbeddedResource&#39;&gt;When specified, the type provider first attempts to load the sample from the specified resource <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;(e.g. &#39;MyCompany.MyAssembly, resource_name.xml&#39;). This is useful when exposing types generated by the type provider.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;InferTypesFromValues&#39;&gt;If true, turns on additional type inference from values. <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;(e.g. type inference infers string values such as &quot;123&quot; as ints and values constrained to 0 and 1 as booleans. The XmlProvider also infers string values as JSON.)&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Schema&#39;&gt;Location of a schema file or a string containing xsd.&lt;/param&gt;</em></div>
-<div class="tip" id="fs42">val author : XmlProvider&lt;...&gt;.Author<br /><br />Full name: 2018-07-20-Xsd type provider and nillable elements.author</div>
-<div class="tip" id="fs43">XmlProvider&lt;...&gt;.Parse(text: string) : XmlProvider&lt;...&gt;.Author<br /><em><br /><br />Parses the specified XML string</em></div>
-<div class="tip" id="fs44">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs34">val AuthorXsd : string<br /><br />Full name: 2018-07-22-Xsd type provider and nillable elements.AuthorXsd</div>
+<div class="tip" id="fs35">val xml1 : string<br /><br />Full name: 2018-07-22-Xsd type provider and nillable elements.xml1</div>
+<div class="tip" id="fs36">val xml2 : string<br /><br />Full name: 2018-07-22-Xsd type provider and nillable elements.xml2</div>
+<div class="tip" id="fs37">val validateAuthor : (string -&gt; Result&lt;unit,string&gt;)<br /><br />Full name: 2018-07-22-Xsd type provider and nillable elements.validateAuthor</div>
+<div class="tip" id="fs38">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs39">Multiple items<br />namespace FSharp<br /><br />--------------------<br />namespace Microsoft.FSharp</div>
+<div class="tip" id="fs40">Multiple items<br />namespace FSharp.Data<br /><br />--------------------<br />namespace Microsoft.FSharp.Data</div>
+<div class="tip" id="fs41">type AuthorXsd = XmlProvider&lt;...&gt;<br /><br />Full name: 2018-07-22-Xsd type provider and nillable elements.AuthorXsd</div>
+<div class="tip" id="fs42">type XmlProvider<br /><br />Full name: FSharp.Data.XmlProvider<br /><em><br /><br />&lt;summary&gt;Typed representation of a XML file.&lt;/summary&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Sample&#39;&gt;Location of a XML sample file or a string containing a sample XML document.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;SampleIsList&#39;&gt;If true, the children of the root in the sample document represent individual samples for the inference.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Global&#39;&gt;If true, the inference unifies all XML elements with the same name.&lt;/param&gt;                     <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Culture&#39;&gt;The culture used for parsing numbers and dates. Defaults to the invariant culture.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Encoding&#39;&gt;The encoding used to read the sample. You can specify either the character set name or the codepage number. Defaults to UTF8 for files, and to ISO-8859-1 the for HTTP requests, unless `charset` is specified in the `Content-Type` response header.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;ResolutionFolder&#39;&gt;A directory that is used when resolving relative file references (at design time and in hosted execution).&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;EmbeddedResource&#39;&gt;When specified, the type provider first attempts to load the sample from the specified resource <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;(e.g. &#39;MyCompany.MyAssembly, resource_name.xml&#39;). This is useful when exposing types generated by the type provider.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;InferTypesFromValues&#39;&gt;If true, turns on additional type inference from values. <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;(e.g. type inference infers string values such as &quot;123&quot; as ints and values constrained to 0 and 1 as booleans. The XmlProvider also infers string values as JSON.)&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Schema&#39;&gt;Location of a schema file or a string containing xsd.&lt;/param&gt;</em></div>
+<div class="tip" id="fs43">val author : XmlProvider&lt;...&gt;.Author<br /><br />Full name: 2018-07-22-Xsd type provider and nillable elements.author</div>
+<div class="tip" id="fs44">XmlProvider&lt;...&gt;.Parse(text: string) : XmlProvider&lt;...&gt;.Author<br /><em><br /><br />Parses the specified XML string</em></div>
 <div class="tip" id="fs45">property XmlProvider&lt;...&gt;.Author.Name: string</div>
 <div class="tip" id="fs46">property XmlProvider&lt;...&gt;.Author.Born: XmlProvider&lt;...&gt;.Born</div>
 <div class="tip" id="fs47">property XmlProvider&lt;...&gt;.Born.Nil: Option&lt;bool&gt;</div>
