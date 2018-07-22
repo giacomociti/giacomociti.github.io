@@ -2,6 +2,9 @@
 open System.IO
 open FSharp.Literate
 
+let options = [| "#r System.Xml" |]
+let fsi = FsiEvaluator(options) :> IFsiEvaluator
+
 // Return path relative to the current file location
 let relative subdir = Path.Combine(__SOURCE_DIRECTORY__, subdir)
 
@@ -12,8 +15,10 @@ let processFile outputDirectory file =
   let htmlFile = Path.Combine(outputDirectory, name + ".html")
   let targetFile = FileInfo(htmlFile)
   if not targetFile.Exists || targetFile.LastWriteTime < fileInfo.LastWriteTime then
-  
-    Literate.ProcessScriptFile(input = fileInfo.FullName, output = tempFile)
+    Literate.ProcessScriptFile(
+      input = fileInfo.FullName, 
+      output = tempFile,
+      fsiEvaluator = fsi)
     let frontMatter = [ "---" 
                         "layout: post"
                         "---" ]
