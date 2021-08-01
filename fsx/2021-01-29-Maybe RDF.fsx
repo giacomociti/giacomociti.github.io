@@ -14,12 +14,12 @@ Algebraic data types are concrete structures capable of representing information
 and are becoming popular for [domain modeling](https://pragprog.com/titles/swdddf/domain-modeling-made-functional/).
 
 But also a logical framework like RDF shines at representing knowledge about a domain.
-Rich Hickey's provoking [talks](https://www.youtube.com/watch?v=YR5WdGrpoug&list=PLZdCLR02grLrEwKaZv-5QbUzK0zGKOOcr) may upset my F# friends, 
-but I think he has a point: explicit, precise data types may lead to rigid designs 
-(to be clear, [this article](https://lexi-lambda.github.io/blog/2020/01/19/no-dynamic-type-systems-are-not-inherently-more-open/) 
+Rich Hickey's provoking [talks](https://www.youtube.com/watch?v=YR5WdGrpoug&list=PLZdCLR02grLrEwKaZv-5QbUzK0zGKOOcr) may upset my F# friends,
+but I think he has a point: explicit, precise data types may lead to rigid designs
+(to be clear, [this article](https://lexi-lambda.github.io/blog/2020/01/19/no-dynamic-type-systems-are-not-inherently-more-open/)
 explains that the culprit for a rigid design is not the type system).
 
-In domain modeling, common advice is to focus on functions and not on data: we should describe the _dynamic_ behavior of a system 
+In domain modeling, common advice is to focus on functions and not on data: we should describe the _dynamic_ behavior of a system
 rather than static information.
 This applies both to OO (classes are collections of functions) and FP (pure functions still have a
 dynamic, computational sense even though we like to think of them as static input-output mappings).
@@ -30,9 +30,9 @@ My endorsement of RDF is limited to this kind of applications, for which other d
 SQL-like or Prolog-like, may work as well.
 
 ## Proof of Concept
-I admit this is cheap philosophy and my claim is not backed by real world experience, so I decided to get a feel of what it means 
+I admit this is cheap philosophy and my claim is not backed by real world experience, so I decided to get a feel of what it means
 to build an application with a core domain based on RDF.
-As a proof of concept, I hacked a [toy](https://github.com/giacomociti/rdf-playground/blob/master/workflow/RdfWorkflow/Workflow.fs) 
+As a proof of concept, I hacked a [toy](https://github.com/giacomociti/rdf-playground/blob/master/workflow/RdfWorkflow/Workflow.fs)
 workflow engine in a few lines of F# code.
 It orchestrates the steps of workflow definitions like the following one (expressed as RDF in Turtle notation):
 
@@ -121,8 +121,7 @@ Purists would ban all of them but in practice they appear routinely in domain lo
 *)
 
 (*** hide ***)
-#r "../packages/dotNetRDF/lib/netstandard2.0/dotNetRDF.dll"
-#r "../packages/Iride/lib/netstandard2.0/Iride.dll"
+#r "nuget: Iride"
 
 (**
 *)

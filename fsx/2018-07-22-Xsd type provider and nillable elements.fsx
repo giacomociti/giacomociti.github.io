@@ -2,13 +2,13 @@
 ### XSD is dead, long live XSD!
 My little contribution to the F# OSS ecosystem is schema support for the
 XML Type Provider. It's been recently merged into [F# Data][FSharp.Data]
-(and will ship soon in the upcoming [version 3.0][FSharp.Data.beta]) after 
+(and will ship soon in the upcoming [version 3.0][FSharp.Data.beta]) after
 being available for a while as a [standalone project][FSharp.Data.Xsd].
 
 It "comes with comprehensible documentation" but I'm going to use this blog
-to post a few tips covering marginal aspects. 
+to post a few tips covering marginal aspects.
 
-Before introducing the type provider (and today's tip about 
+Before introducing the type provider (and today's tip about
 nillable elements) let me spend a few words about schemas.
 ## Validation
 
@@ -18,8 +18,8 @@ We will use the following handy snippet:
 open System.Xml
 open System.Xml.Schema
 
-let createSchema (xmlReader: XmlReader) =    
-    let schemaSet = XmlSchemaSet() 
+let createSchema (xmlReader: XmlReader) =
+    let schemaSet = XmlSchemaSet()
     schemaSet.Add(null, xmlReader) |> ignore
     schemaSet.Compile()
     schemaSet
@@ -28,7 +28,7 @@ let parseSchema xsdText =
     use reader = XmlReader.Create(new System.IO.StringReader(xsdText))
     createSchema reader
 
-let loadSchema xsdFile =    
+let loadSchema xsdFile =
     use reader = XmlReader.Create(inputUri = xsdFile)
     createSchema reader
 
@@ -48,7 +48,7 @@ Given a schema (`AuthorXsd`) and some documents (`xml1` and `xml2`):
 *)
 [<Literal>]
 let AuthorXsd = """
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
   elementFormDefault="qualified" attributeFormDefault="unqualified">
     <xs:element name="author" type="authorType" />
     <xs:complexType name="authorType">
@@ -88,7 +88,7 @@ and see that `xml2` lacks the `name` element:
 
 (*** hide ***)
 #r "System.Xml.Linq"
-#r "../packages/FSharp.Data.Xsd/lib/net45/FSharp.Data.Xsd.dll"
+#r "nuget: FSharp.Data"
 
 (**
 ## Type Provider
@@ -175,7 +175,7 @@ was not entered *vs* the value *NULL* was entered (can you feel the smell of
 the billion dollar mistake?).
 
 In practice, when reading XML, you mostly rely on `Value` and ignore `Nil`.
-When you use the type provider to write XML, on the other hand, you need 
+When you use the type provider to write XML, on the other hand, you need
 to pass appropriate values in order to obtain a valid document:
 *)
 

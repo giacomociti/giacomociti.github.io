@@ -7,8 +7,8 @@ hinting at old and fascinating techniques for their algebraic
 specification.
 
 ### Algebraic Data Types
-Algebraic Data Types are the workhorses of statically typed 
-functional languages like F#. They are also known as *sum types* or 
+Algebraic Data Types are the workhorses of statically typed
+functional languages like F#. They are also known as *sum types* or
 *discriminated unions*, so I will refer to them as DUs here,
 reserving  the ADT acronym for abstract data types which is the main
 subject of the post.
@@ -36,14 +36,14 @@ similarities outweigh the differences.
 
 It's a fact of (computing) history that [objects won over ADTs][Martini]
 and even a functional first language like [F# embraces objects][Syme].
-That's why I'm using F# objects to show ADTs (modules are used in the 
+That's why I'm using F# objects to show ADTs (modules are used in the
 ML tradition). This is also an occasion to show that _immutable_
 objects are very nice and close to the mathematical notion of
 abstract data type.
 *)
 
 (*** hide ***)
-#r "../packages/FsCheck/lib/net452/FsCheck.dll"
+#r "nuget: FsCheck"
 module Module1 =
 
 (**
@@ -75,7 +75,7 @@ move to a proper class, although with a dummy implementation:
         member __.Top: 'a Option = None
 
 
-(** 
+(**
 The class constructor is private and takes a private representation
 object. For now all the ADT constructors (`New`, `Push` and `Pop`)
 necessarily use the same dummy representation value (`TODO`).
@@ -97,10 +97,10 @@ Here are the stack axioms (we use `int` for the generic parameter
 but any type will do):
 *)
 
-    let axiom1 () = 
+    let axiom1 () =
         Stack<int>.New().Pop() = Stack<int>.New()
 
-    let axiom2 () = 
+    let axiom2 () =
         Stack<int>.New().Top = None
 
     let axiom3 (s: Stack<int>) x =
@@ -109,7 +109,7 @@ but any type will do):
     let axiom4 (s: Stack<int>) x =
         s.Push(x).Top = Some x
 
-    
+
     open FsCheck
 
     Check.Quick axiom1
@@ -161,12 +161,12 @@ equivalent:
 (*** hide ***)
 module Module3 =
     open Module2
-(**    
+(**
 ### Term Algebra
 Now we are equipped with stack equality but the remaining issue is
 that FsCheck can't generate instances of the `Stack` type (because
 it is not a concrete data type). The trick is to define the so
-called _term algebra_ as a DU: 
+called _term algebra_ as a DU:
 *)
     type StackTerm<'a> =
         | New
@@ -200,11 +200,11 @@ to adapt our properties a little:
 *)
     let axiom0 (s: StackTerm<int>) =
         stack s = stack s
-    
-    let axiom1 () = 
+
+    let axiom1 () =
         Stack<int>.New().Pop() = Stack<int>.New()
 
-    let axiom2 () = 
+    let axiom2 () =
         Stack<int>.New().Top = None
 
     let axiom3 (s: StackTerm<int>) x =
@@ -237,7 +237,7 @@ We use terms also for the internal representation:
 *)
 
     type Stack<'a when 'a : equality> private(repr: StackTerm<'a>) =
-    
+
         let rec reduce term =
             match term with
             | New -> New
@@ -252,7 +252,7 @@ We use terms also for the internal representation:
 
         member __.Pop() = Pop(repr) |> Stack
 
-        member __.Top: 'a Option = 
+        member __.Top: 'a Option =
             match reduce repr with
             | Push(x, _) -> Some x
             | _ -> None
@@ -302,7 +302,7 @@ example `New` and `Push` are enough because every stack involving
 *)
     Stack<int>.New().Push(42).Pop().Push(5) = Stack<int>.New().Push(5)
 (**
-This approach provides a precise guideline to specify axioms: 
+This approach provides a precise guideline to specify axioms:
 one axiom is needed for each combination of a non-canonical operation
 applied to the result of a canonical operation. Our stack axioms
 happen to follow this pattern:
@@ -336,11 +336,11 @@ we can simplify our representation type:
             | Push(_, s) -> s
             |> Stack
 
-        member __.Top: 'a Option = 
+        member __.Top: 'a Option =
             match repr with
             | New -> None
             | Push(x, _) -> Some x
-            
+
         member private __.repr = repr
         override __.Equals(obj) =
             match obj with

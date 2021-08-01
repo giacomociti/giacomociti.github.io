@@ -319,47 +319,97 @@ permeating OO languages.</p>
 
 
 <div class="fsdocs-tip" id="fs1">namespace Iride</div>
-<div class="fsdocs-tip" id="fs2">type Schema =<br />&#160;&#160;nested type Offer</div>
-<div class="fsdocs-tip" id="fs3">type GraphProvider<br /><em>&lt;summary&gt;Type provider of RDF classes.&lt;/summary&gt;
+<div class="fsdocs-tip" id="fs2">type Schema =
+  nested type Offer</div>
+<div class="fsdocs-tip" id="fs3">type GraphProvider =<br /><em>&lt;summary&gt;Type provider of RDF classes.&lt;/summary&gt;
            &lt;param name=&#39;Sample&#39;&gt;RDF Sample as Turtle.&lt;/param&gt;
            &lt;param name=&#39;Schema&#39;&gt;RDF Schema as Turtle.&lt;/param&gt;
          </em></div>
 <div class="fsdocs-tip" id="fs4">val offer : Schema.Offer</div>
-<div class="fsdocs-tip" id="fs5">type Offer =<br />&#160;&#160;new : resource: Resource -&gt; Offer<br />&#160;&#160;member Equals : obj: obj -&gt; bool<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member Gtin : PropertyValues&lt;string&gt;<br />&#160;&#160;member Price : PropertyValues&lt;decimal&gt;<br />&#160;&#160;member PriceCurrency : PropertyValues&lt;string&gt;<br />&#160;&#160;member Resource : Resource<br />&#160;&#160;static member Add : graph: IGraph * node: INode -&gt; Offer<br />&#160;&#160;static member Get : graph: IGraph -&gt; IEnumerable&lt;Offer&gt;</div>
-<div class="fsdocs-tip" id="fs6">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
-<div class="fsdocs-tip" id="fs7">val exactlyOne : source:seq&lt;&#39;T&gt; -&gt; &#39;T</div>
+<div class="fsdocs-tip" id="fs5">type Offer =
+  new : resource: Resource -&gt; Offer
+  member Equals : obj: obj -&gt; bool
+  member GetHashCode : unit -&gt; int
+  static member Add : graph: IGraph * node: INode -&gt; Offer + 1 overload
+  static member Get : graph: IGraph -&gt; IEnumerable&lt;Offer&gt;
+  member Gtin : PropertyValues&lt;string&gt;
+  member Price : PropertyValues&lt;decimal&gt;
+  member PriceCurrency : PropertyValues&lt;string&gt;
+  member Resource : Resource</div>
+<div class="fsdocs-tip" id="fs6">module Seq
+
+from Microsoft.FSharp.Collections<br /><em>&lt;summary&gt;Contains operations for working with values of type &lt;see cref=&quot;T:Microsoft.FSharp.Collections.seq`1&quot; /&gt;.&lt;/summary&gt;</em></div>
+<div class="fsdocs-tip" id="fs7">val exactlyOne : source:seq&lt;&#39;T&gt; -&gt; &#39;T<br /><em>&lt;summary&gt;Returns the only element of the sequence.&lt;/summary&gt;<br />&lt;param name=&quot;source&quot;&gt;The input sequence.&lt;/param&gt;<br />&lt;returns&gt;The only element of the sequence.&lt;/returns&gt;<br />&lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when the input sequence is null.&lt;/exception&gt;<br />&lt;exception cref=&quot;T:System.ArgumentException&quot;&gt;Thrown when the input does not have precisely one element.&lt;/exception&gt;</em></div>
 <div class="fsdocs-tip" id="fs8">property Schema.Offer.PriceCurrency: PropertyValues&lt;string&gt; with get</div>
 <div class="fsdocs-tip" id="fs9">val price : decimal</div>
 <div class="fsdocs-tip" id="fs10">property Schema.Offer.Price: PropertyValues&lt;decimal&gt; with get</div>
 <div class="fsdocs-tip" id="fs11">active recognizer EUR: Schema.Offer -&gt; Choice&lt;Schema.Offer,Schema.Offer,Schema.Offer&gt;</div>
-<div class="fsdocs-tip" id="fs12">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
-<div class="fsdocs-tip" id="fs13">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="fsdocs-tip" id="fs12">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;<br /><em>&lt;summary&gt;The representation of &quot;Value of type &#39;T&quot;&lt;/summary&gt;<br />&lt;param name=&quot;Value&quot;&gt;The input value.&lt;/param&gt;<br />&lt;returns&gt;An option representing the value.&lt;/returns&gt;</em></div>
+<div class="fsdocs-tip" id="fs13">union case Option.None: Option&lt;&#39;T&gt;<br /><em>&lt;summary&gt;The representation of &quot;No value&quot;&lt;/summary&gt;</em></div>
 <div class="fsdocs-tip" id="fs14">active recognizer USD: Schema.Offer -&gt; Choice&lt;Schema.Offer,Schema.Offer,Schema.Offer&gt;</div>
 <div class="fsdocs-tip" id="fs15">active recognizer Other: Schema.Offer -&gt; Choice&lt;Schema.Offer,Schema.Offer,Schema.Offer&gt;</div>
 <div class="fsdocs-tip" id="fs16">val sendOffer : _arg1:Schema.Offer -&gt; unit</div>
 <div class="fsdocs-tip" id="fs17">active recognizer Expensive: Schema.Offer -&gt; Schema.Offer option</div>
 <div class="fsdocs-tip" id="fs18">val gtin : string</div>
 <div class="fsdocs-tip" id="fs19">property Schema.Offer.Gtin: PropertyValues&lt;string&gt; with get</div>
-<div class="fsdocs-tip" id="fs20">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T</div>
+<div class="fsdocs-tip" id="fs20">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><em>&lt;summary&gt;Print to &lt;c&gt;stdout&lt;/c&gt; using the given format, and add a newline.&lt;/summary&gt;<br />&lt;param name=&quot;format&quot;&gt;The formatter.&lt;/param&gt;<br />&lt;returns&gt;The formatted result.&lt;/returns&gt;</em></div>
 <div class="fsdocs-tip" id="fs21">val sendOffers : data:VDS.RDF.IGraph -&gt; unit</div>
 <div class="fsdocs-tip" id="fs22">val data : VDS.RDF.IGraph</div>
 <div class="fsdocs-tip" id="fs23">namespace VDS</div>
 <div class="fsdocs-tip" id="fs24">namespace VDS.RDF</div>
-<div class="fsdocs-tip" id="fs25">type IGraph =<br />&#160;&#160;inherit INodeFactory<br />&#160;&#160;inherit IDisposable<br />&#160;&#160;inherit IXmlSerializable<br />&#160;&#160;member AllNodes : IEnumerable&lt;INode&gt;<br />&#160;&#160;member Assert : t:Triple -&gt; bool + 1 overload<br />&#160;&#160;member BaseUri : Uri with get, set<br />&#160;&#160;member Clear : unit -&gt; unit<br />&#160;&#160;member ContainsTriple : t:Triple -&gt; bool<br />&#160;&#160;member CreateUriNode : unit -&gt; IUriNode + 1 overload<br />&#160;&#160;member Difference : g:IGraph -&gt; GraphDiffReport<br />&#160;&#160;member Equals : g:IGraph * mapping:Dictionary&lt;INode, INode&gt; -&gt; bool<br />&#160;&#160;member GetBlankNode : nodeId:string -&gt; IBlankNode<br />&#160;&#160;member GetLiteralNode : literal:string -&gt; ILiteralNode + 2 overloads<br />&#160;&#160;...</div>
+<div class="fsdocs-tip" id="fs25">type IGraph =
+  inherit INodeFactory
+  inherit IDisposable
+  inherit IXmlSerializable
+  member Assert : t: Triple -&gt; bool + 1 overload
+  member Clear : unit -&gt; unit
+  member ContainsTriple : t: Triple -&gt; bool
+  member CreateUriNode : unit -&gt; IUriNode + 1 overload
+  member Difference : g: IGraph -&gt; GraphDiffReport
+  member Equals : g: IGraph * mapping: byref&lt;Dictionary&lt;INode,INode&gt;&gt; -&gt; bool
+  member GetBlankNode : nodeId: string -&gt; IBlankNode
+  ...<br /><em>&lt;summary&gt;
+            Interface for RDF Graphs.
+            &lt;/summary&gt;<br />&lt;remarks&gt;&lt;para&gt;
+            Most implementations will probably want to inherit from the abstract class &lt;see cref=&quot;T:VDS.RDF.BaseGraph&quot;&gt;BaseGraph&lt;/see&gt; since it contains reference implementations of various algorithms (Graph Equality/Graph Difference/Sub-Graph testing etc) which will save considerable work in implementation and ensure consistent behaviour of some methods across implementations.
+            &lt;/para&gt;&lt;/remarks&gt;</em></div>
 <div class="fsdocs-tip" id="fs26">Schema.Offer.Get(graph: VDS.RDF.IGraph) : System.Collections.Generic.IEnumerable&lt;Schema.Offer&gt;</div>
-<div class="fsdocs-tip" id="fs27">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit</div>
-<div class="fsdocs-tip" id="fs28">type G =<br />&#160;&#160;nested type SearchRequest</div>
+<div class="fsdocs-tip" id="fs27">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit<br /><em>&lt;summary&gt;Applies the given function to each element of the collection.&lt;/summary&gt;<br />&lt;param name=&quot;action&quot;&gt;A function to apply to each element of the sequence.&lt;/param&gt;<br />&lt;param name=&quot;source&quot;&gt;The input sequence.&lt;/param&gt;<br />&lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when the input sequence is null.&lt;/exception&gt;</em></div>
+<div class="fsdocs-tip" id="fs28">type G =
+  nested type SearchRequest</div>
 <div class="fsdocs-tip" id="fs29">val validKeyword : k:string -&gt; bool</div>
 <div class="fsdocs-tip" id="fs30">val k : string</div>
-<div class="fsdocs-tip" id="fs31">module String<br /><br />from Microsoft.FSharp.Core</div>
-<div class="fsdocs-tip" id="fs32">val length : str:string -&gt; int</div>
-<div class="fsdocs-tip" id="fs33">Multiple items<br />type SearchRequest =<br />&#160;&#160;private new : request:SearchRequest -&gt; SearchRequest<br />&#160;&#160;member Keywords : seq&lt;string&gt;<br />&#160;&#160;static member TryCreate : data:IGraph -&gt; SearchRequest option<br /><br />--------------------<br />private new : request:G.SearchRequest -&gt; SearchRequest</div>
+<div class="fsdocs-tip" id="fs31">module String
+
+from Microsoft.FSharp.Core<br /><em>&lt;summary&gt;Functional programming operators for string processing.  Further string operations
+ are available via the member functions on strings and other functionality in
+  &lt;a href=&quot;http://msdn2.microsoft.com/en-us/library/system.string.aspx&quot;&gt;System.String&lt;/a&gt; 
+ and &lt;a href=&quot;http://msdn2.microsoft.com/library/system.text.regularexpressions.aspx&quot;&gt;System.Text.RegularExpressions&lt;/a&gt; types.
+ &lt;/summary&gt;<br />&lt;category&gt;Strings and Text&lt;/category&gt;</em></div>
+<div class="fsdocs-tip" id="fs32">val length : str:string -&gt; int<br /><em>&lt;summary&gt;Returns the length of the string.&lt;/summary&gt;<br />&lt;param name=&quot;str&quot;&gt;The input string.&lt;/param&gt;<br />&lt;returns&gt;The number of characters in the string.&lt;/returns&gt;</em></div>
+<div class="fsdocs-tip" id="fs33">Multiple items<br />type SearchRequest =
+  private new : request:SearchRequest -&gt; SearchRequest
+  static member TryCreate : data:IGraph -&gt; SearchRequest option
+  member Keywords : seq&lt;string&gt;<br /><br />--------------------<br />private new : request:G.SearchRequest -&gt; SearchRequest</div>
 <div class="fsdocs-tip" id="fs34">val request : G.SearchRequest</div>
-<div class="fsdocs-tip" id="fs35">type SearchRequest =<br />&#160;&#160;new : resource: Resource -&gt; SearchRequest<br />&#160;&#160;member Equals : obj: obj -&gt; bool<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member Keyword : PropertyValues&lt;string&gt;<br />&#160;&#160;member Resource : Resource<br />&#160;&#160;static member Add : graph: IGraph * node: INode -&gt; SearchRequest<br />&#160;&#160;static member Get : graph: IGraph -&gt; IEnumerable&lt;SearchRequest&gt;</div>
+<div class="fsdocs-tip" id="fs35">type SearchRequest =
+  new : resource: Resource -&gt; SearchRequest
+  member Equals : obj: obj -&gt; bool
+  member GetHashCode : unit -&gt; int
+  static member Add : graph: IGraph * node: INode -&gt; SearchRequest + 1 overload
+  static member Get : graph: IGraph -&gt; IEnumerable&lt;SearchRequest&gt;
+  member Keyword : PropertyValues&lt;string&gt;
+  member Resource : Resource</div>
 <div class="fsdocs-tip" id="fs36">property G.SearchRequest.Keyword: PropertyValues&lt;string&gt; with get</div>
-<div class="fsdocs-tip" id="fs37">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;</div>
+<div class="fsdocs-tip" id="fs37">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><em>&lt;summary&gt;Returns a new collection containing only the elements of the collection
+ for which the given predicate returns &quot;true&quot;. This is a synonym for Seq.where.&lt;/summary&gt;<br />&lt;remarks&gt;The returned sequence may be passed between threads safely. However, 
+ individual IEnumerator values generated from the returned sequence should not be accessed concurrently.
+
+ Remember sequence is lazy, effects are delayed until it is enumerated.&lt;/remarks&gt;<br />&lt;param name=&quot;predicate&quot;&gt;A function to test whether each item in the input sequence should be included in the output.&lt;/param&gt;<br />&lt;param name=&quot;source&quot;&gt;The input sequence.&lt;/param&gt;<br />&lt;returns&gt;The result sequence.&lt;/returns&gt;<br />&lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when the input sequence is null.&lt;/exception&gt;</em></div>
 <div class="fsdocs-tip" id="fs38">val data : IGraph</div>
 <div class="fsdocs-tip" id="fs39">G.SearchRequest.Get(graph: IGraph) : System.Collections.Generic.IEnumerable&lt;G.SearchRequest&gt;</div>
-<div class="fsdocs-tip" id="fs40">val toArray : source:seq&lt;&#39;T&gt; -&gt; &#39;T []</div>
+<div class="fsdocs-tip" id="fs40">val toArray : source:seq&lt;&#39;T&gt; -&gt; &#39;T []<br /><em>&lt;summary&gt;Builds an array from the given collection.&lt;/summary&gt;<br />&lt;param name=&quot;source&quot;&gt;The input sequence.&lt;/param&gt;<br />&lt;returns&gt;The result array.&lt;/returns&gt;<br />&lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when the input sequence is null.&lt;/exception&gt;</em></div>
 <div class="fsdocs-tip" id="fs41">val r : G.SearchRequest</div>
-<div class="fsdocs-tip" id="fs42">val exists : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; bool</div>
+<div class="fsdocs-tip" id="fs42">val exists : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; bool<br /><em>&lt;summary&gt;Tests if any element of the sequence satisfies the given predicate.&lt;/summary&gt;<br />&lt;remarks&gt;The predicate is applied to the elements of the input sequence. If any application 
+ returns true then the overall result is true and no further elements are tested. 
+ Otherwise, false is returned.&lt;/remarks&gt;<br />&lt;param name=&quot;predicate&quot;&gt;A function to test each item of the input sequence.&lt;/param&gt;<br />&lt;param name=&quot;source&quot;&gt;The input sequence.&lt;/param&gt;<br />&lt;returns&gt;True if any result from the predicate is true; false otherwise.&lt;/returns&gt;<br />&lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when the input sequence is null.&lt;/exception&gt;</em></div>
