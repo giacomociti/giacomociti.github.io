@@ -47,7 +47,4 @@ exclude:
     - Gemfile.lock
     - build.fsx
     - template.html
-    - paket.lock
-    - paket.dependencies
     - fsx/
-    - packages/
