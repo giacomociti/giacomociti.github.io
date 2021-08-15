@@ -2,8 +2,10 @@
 layout: post
 ---
 <p>Property based testing is an effective way to verify the input/output relation of pure functions,
-leveraging predicates (properties) that describe such relation.</p>
-<p><em>Model</em> based testing extends the scope to stateful systems, whose behavior is described in terms of an abstract model.</p>
+leveraging predicates (properties) to declaratively describe such relation.</p>
+<p><em>Model</em> based testing extends the scope to stateful systems,
+whose behavior is described in terms of an abstract model,
+leveraging the more operational paradigm of state machines.</p>
 <p>This is an introduction aimed at providing a basic understanding of the idea.
 It is yet another <a href="https://porg.es/model-based-testing/">poor man's approach</a>
 which may also work in practice but, since it is deliberately simplistic,
@@ -34,10 +36,12 @@ We model its state as a list and we focus on two actions only: enqueue and deque
 and then check that the resulting state is the same.</p>
 <h3>The system and its model</h3>
 <p>The functions <code>fromModel</code> and <code>toModel</code> define the correspondance between the abstract model and
-the actual system. They are easy to implement in this example but may be challenging in more realistic scenarios
-(most libraries for model based testing in fact take a different route, as we will see later).</p>
+the actual system. They are easy to implement in this example but may be challenging in more realistic scenarios.
+Such challenges may be due to the system under test hiding its internal state or persisting it in a distributed
+environment. Most libraries for model based testing in fact take a different route (as we will see later),
+but for now we naively assume that:</p>
 <ul>
-<li><code>fromModel</code> should put the system under test in the given state.</li>
+<li><code>fromModel</code> puts the system under test in the given state.</li>
 <li><code>toModel</code> retrieves the state of the system under test.</li>
 </ul>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
@@ -290,25 +294,35 @@ but we can reuse <code>actionGenerator</code>, <code>nextState</code> and <code>
 5% short sequences (between 1-6 commands).</code></pre></td></tr></table>
 <p>Among the benefits of using a real library, we get shrinking and useful error messages in
 case of test failures.
-Notice also the added flexibility in the <code>Check</code> method: if <code>toModel</code>is also challenging to implement,
+Notice also the added flexibility given by the <code>Check</code> method: if the state is hard to retrieve,
 instead of calling <code>run</code> and checking the whole state, we are free to focus only on the relevant part of the system.</p>
-<h2>All you touch and all you see...</h2>
-<h3>Understanding vs verifying</h3>
+<h2>Understanding vs verifying</h2>
 <p>Instead of discussing how effective the approach is for verification,
 let me point out that modeling is valuable at least to document a system
-and to better understand it.
-The <code>nextState</code> function is especially valuable because it expresses our understanding of the system.</p>
-<h3>Views as live documents</h3>
+and to better understand it: the <code>nextState</code> function expresses our understanding of the system.</p>
 <p>If you're familiar with the <a href="https://zaid-ajaj.github.io/the-elmish-book/#/">ELM Architecture</a>,
 looking at <code>nextState</code> should ring a bell: just add a view function and you have the MVU pattern!</p>
 <p>And F# allows to use the same code both for verification with .NET
 and for visualization with JavaScript.</p>
 <p>I think this is an aspect worth exploring, in the spirit of Saymour Papert.</p>
-<h2>Lack of encapsulation</h2>
-<p>TODO
-- quote Dijkstra via Meyer
-- quote Lamport
-- we're testing a system, not an abstraction (class, abstract data type...)</p>
+<h2>Final remark on abstraction</h2>
+<p>The provided example was not meant to precisely capture the essence of the queue concept.
+It may be improved and refined to this aim, but I just wanted to describe a small stateful system.</p>
+<p>I often praise abstract data types but, quoting Leslie Lamport
+(via <a href="https://pron.github.io/posts/tlaplus_part4#model-based-specifications-and-information-hiding">Ron Pressler</a>):</p>
+<blockquote>
+<p>The lesson I learned from the specification work of the early ’80s is that axiomatic specifications don’t work.
+The idea of specifying a system by writing down all the properties it satisfies seems perfect.
+We just list what the system must and must not do, and we have a completely abstract specification.
+It sounds wonderful; it just doesn’t work in practice.</p>
+</blockquote>
+<p>I have to admit we rarely encounter formal ADT specifications
+besides <a href="https://bertrandmeyer.com/2019/12/03/are-my-requirements-complete/">simple examples</a>
+and <a href="https://giacomociti.github.io/2018/05/26/The-lost-art-of-data-abstraction.html">stacks</a>
+(a quip of Djikstra, according to Bertrand Meyer, is that the purpose of ADT theory is to define stacks).</p>
+<p>So, if we leave aside <a href="https://plato.stanford.edu/archives/spr2016/entries/computer-science/">philosophy</a>,
+we can lower a bit the pretenses of full abstraction and understand our systems better,
+adopting the operational paradigm of state machines.</p>
 
 
 <div class="fsdocs-tip" id="fs1">namespace System</div>

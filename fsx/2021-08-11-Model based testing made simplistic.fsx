@@ -1,8 +1,10 @@
 (**
 Property based testing is an effective way to verify the input/output relation of pure functions,
-leveraging predicates (properties) that describe such relation.
+leveraging predicates (properties) to declaratively describe such relation.
 
-_Model_ based testing extends the scope to stateful systems, whose behavior is described in terms of an abstract model.
+_Model_ based testing extends the scope to stateful systems,
+whose behavior is described in terms of an abstract model,
+leveraging the more operational paradigm of state machines.
 
 This is an introduction aimed at providing a basic understanding of the idea.
 It is yet another [poor man's approach](https://porg.es/model-based-testing/)
@@ -28,10 +30,12 @@ and then check that the resulting state is the same.
 
 ### The system and its model
 The functions `fromModel` and `toModel` define the correspondance between the abstract model and
-the actual system. They are easy to implement in this example but may be challenging in more realistic scenarios
-(most libraries for model based testing in fact take a different route, as we will see later).
+the actual system. They are easy to implement in this example but may be challenging in more realistic scenarios.
+Such challenges may be due to the system under test hiding its internal state or persisting it in a distributed
+environment. Most libraries for model based testing in fact take a different route (as we will see later),
+but for now we naively assume that:
 
-- `fromModel` should put the system under test in the given state.
+- `fromModel` puts the system under test in the given state.
 - `toModel` retrieves the state of the system under test.
 *)
     let fromModel (state: State) =
@@ -65,6 +69,7 @@ This time the action is executed on the actual system under test.
         toModel sut
 
 (**
+
 ### Invariant and Precondition
 Next we define two predicates: an invariant (that should hold in every state)
 and a precondition (that should hold in order to perform an action):
@@ -195,19 +200,14 @@ but we can reuse `actionGenerator`, `nextState` and `run`:
 (**
 Among the benefits of using a real library, we get shrinking and useful error messages in
 case of test failures.
-Notice also the added flexibility in the `Check` method: if `toModel`is also challenging to implement,
+Notice also the added flexibility given by the `Check` method: if the state is hard to retrieve,
 instead of calling `run` and checking the whole state, we are free to focus only on the relevant part of the system.
 
-## All you touch and all you see...
-
-### Understanding vs verifying
-
+## Understanding vs verifying
 Instead of discussing how effective the approach is for verification,
 let me point out that modeling is valuable at least to document a system
-and to better understand it.
-The `nextState` function is especially valuable because it expresses our understanding of the system.
+and to better understand it: the `nextState` function expresses our understanding of the system.
 
-### Views as live documents
 If you're familiar with the [ELM Architecture](https://zaid-ajaj.github.io/the-elmish-book/#/),
 looking at `nextState` should ring a bell: just add a view function and you have the MVU pattern!
 
@@ -216,12 +216,27 @@ and for visualization with JavaScript.
 
 I think this is an aspect worth exploring, in the spirit of Saymour Papert.
 
-## Lack of encapsulation
-TODO
-- quote Dijkstra via Meyer
-- quote Lamport
-- we're testing a system, not an abstraction (class, abstract data type...)
+## Final remark on abstraction
 
+The provided example was not meant to precisely capture the essence of the queue concept.
+It may be improved and refined to this aim, but I just wanted to describe a small stateful system.
+
+I often praise abstract data types but, quoting Leslie Lamport
+(via [Ron Pressler](https://pron.github.io/posts/tlaplus_part4#model-based-specifications-and-information-hiding)):
+
+> The lesson I learned from the specification work of the early ’80s is that axiomatic specifications don’t work.
+> The idea of specifying a system by writing down all the properties it satisfies seems perfect.
+> We just list what the system must and must not do, and we have a completely abstract specification.
+> It sounds wonderful; it just doesn’t work in practice.
+
+I have to admit we rarely encounter formal ADT specifications
+besides [simple examples](https://bertrandmeyer.com/2019/12/03/are-my-requirements-complete/)
+and [stacks](https://giacomociti.github.io/2018/05/26/The-lost-art-of-data-abstraction.html)
+(a quip of Djikstra, according to Bertrand Meyer, is that the purpose of ADT theory is to define stacks).
+
+So, if we leave aside [philosophy](https://plato.stanford.edu/archives/spr2016/entries/computer-science/),
+we can lower a bit the pretenses of full abstraction and understand our systems better,
+adopting the operational paradigm of state machines.
 
 *)
 
