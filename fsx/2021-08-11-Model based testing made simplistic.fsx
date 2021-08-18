@@ -4,7 +4,7 @@ leveraging predicates (properties) to declaratively describe such relation.
 
 _Model_ based testing extends the scope to stateful systems,
 whose behavior is described in terms of an abstract model,
-leveraging the more operational paradigm of state machines.
+leveraging state machines.
 
 This is an introduction aimed at providing a basic understanding of the idea.
 It is yet another [poor man's approach](https://porg.es/model-based-testing/)
@@ -48,7 +48,7 @@ but for now we naively assume that:
 ### State transitions
 The essence of our model is captured by the following function defining state transitions:
 *)
-    let nextState (state: State, action: Action) =
+    let nextState (action: Action) (state: State) =
         match action with
         | Enqueue x -> List.append state [x]
         | Dequeue -> state.Tail
@@ -62,7 +62,7 @@ The abstract effect of a dequeue is to remove the head of the list representing 
 The `run` function is the actual counterpart to the `nextState` function above.
 This time the action is executed on the actual system under test.
 *)
-    let run (sut: Sut, action: Action) =
+    let run (action: Action) (sut: Sut) =
         match action with
         | Enqueue x -> sut.Enqueue x
         | Dequeue -> sut.Dequeue() |> ignore
@@ -76,9 +76,9 @@ and a precondition (that should hold in order to perform an action):
 *)
     let invariant (_: State) = true
 
-    let precondition (state: State, action: Action) =
-        match (state, action) with
-        | [], Dequeue -> false
+    let precondition (action: Action) (state: State) =
+        match (action, state) with
+        | Dequeue, [] -> false
         | _ -> true
 
 (**
@@ -98,7 +98,7 @@ conforms to the model.
         invariant state
         |> check "Input Invariant"
 
-        precondition (state, action)
+        precondition action state
         |> check "Precondition"
 
         let sut = fromModel state
@@ -106,12 +106,12 @@ conforms to the model.
         toModel sut = state
         |> check "Initial State"
 
-        let expected = nextState (state, action)
+        let expected = nextState action state
 
         invariant expected
         |> check "Expected Invariant"
 
-        let actual = run (sut, action)
+        let actual = run action sut
 
         actual = expected
         |> check "Final State"
@@ -182,12 +182,12 @@ but we can reuse `actionGenerator`, `nextState` and `run`:
                 actionGenerator state
                 |> Gen.map (fun action -> {
                     new Operation<Sut, State>() with
-                        member __.Run state = nextState (state, action)
+                        member __.Run state = nextState action state
 
                         member __.Check (sut, state) =
-                            let actual = run (sut, action)
+                            let actual = run action sut
                             state = actual
-                            |@ sprintf "Inc: model = %A, actual = %A" state actual
+                            |@ sprintf "model = %A, actual = %A" state actual
 
                         override __.ToString() = sprintf "%A" action })
     }
@@ -203,23 +203,50 @@ case of test failures.
 Notice also the added flexibility given by the `Check` method: if the state is hard to retrieve,
 instead of calling `run` and checking the whole state, we are free to focus only on the relevant part of the system.
 
-## Understanding vs verifying
+## Model View Update
 Instead of discussing how effective the approach is for verification,
-let me point out that modeling is valuable at least to document a system
-and to better understand it: the `nextState` function expresses our understanding of the system.
+let me point out that modeling is valuable at least for documentation:
+the `nextState` function expresses our understanding of the system.
 
-If you're familiar with the [ELM Architecture](https://zaid-ajaj.github.io/the-elmish-book/#/),
+If you're familiar with the [ELM Architecture](https://guide.elm-lang.org/architecture/),
 looking at `nextState` should ring a bell: just add a view function and you have the MVU pattern!
+And the nice thing is that [F#](https://zaid-ajaj.github.io/the-elmish-book/#/) allows to use
+the same code, both for verification with .NET and for visualization with JavaScript.
 
-And F# allows to use the same code both for verification with .NET
-and for visualization with JavaScript.
+*)
 
-I think this is an aspect worth exploring, in the spirit of Saymour Papert.
+    #r "nuget: Fable.Elmish.React"
 
-## Final remark on abstraction
+    open Elmish
+    open Elmish.React
+    open Fable.React.Props
+    open Fable.React.Helpers
+    open Fable.React.Standard
+
+    let init () = []
+
+    let rnd = System.Random()
+
+    let view (state: State) (dispatch: Action -> unit) =
+        div [] [
+            button [ OnClick (fun _ -> rnd.Next(100) |> Enqueue |> dispatch) ] [ str "Enqueue" ]
+            button [ OnClick (fun _ -> dispatch Dequeue) ] [ str "Dequeue" ]
+            div [] [ str (sprintf "%A" state) ] // TODO list view
+        ]
+
+    Program.mkSimple init nextState view
+    |> Program.withReactSynchronous "elmish-app"
+    |> Program.run
+
+(**
+
+I think this 'live documentation' aspect is worth exploring, in the spirit of Saymour Papert.
+
+## Final remark
 
 The provided example was not meant to precisely capture the essence of the queue concept.
-It may be improved and refined to this aim, but I just wanted to describe a small stateful system.
+It may be improved and refined to this aim, but I just wanted to describe a small stateful system,
+with no attempt to define a proper abstraction.
 
 I often praise abstract data types but, quoting Leslie Lamport
 (via [Ron Pressler](https://pron.github.io/posts/tlaplus_part4#model-based-specifications-and-information-hiding)):
@@ -235,8 +262,8 @@ and [stacks](https://giacomociti.github.io/2018/05/26/The-lost-art-of-data-abstr
 (a quip of Djikstra, according to Bertrand Meyer, is that the purpose of ADT theory is to define stacks).
 
 So, if we leave aside [philosophy](https://plato.stanford.edu/archives/spr2016/entries/computer-science/),
-we can lower a bit the pretenses of full abstraction and understand our systems better,
-adopting the operational paradigm of state machines.
+we can lower a bit our theoretical pretenses and understand our systems better,
+embracing the operational paradigm of state machines.
 
 *)
 

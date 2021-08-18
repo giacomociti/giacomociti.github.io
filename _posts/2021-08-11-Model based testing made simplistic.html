@@ -5,7 +5,7 @@ layout: post
 leveraging predicates (properties) to declaratively describe such relation.</p>
 <p><em>Model</em> based testing extends the scope to stateful systems,
 whose behavior is described in terms of an abstract model,
-leveraging the more operational paradigm of state machines.</p>
+leveraging state machines.</p>
 <p>This is an introduction aimed at providing a basic understanding of the idea.
 It is yet another <a href="https://porg.es/model-based-testing/">poor man's approach</a>
 which may also work in practice but, since it is deliberately simplistic,
@@ -65,7 +65,7 @@ but for now we naively assume that:</p>
 <span class="l">3: </span>
 <span class="l">4: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 24)" onmouseover="showTip(event, 'fs18', 24)" class="fn">nextState</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="fn">state</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs6', 26)" onmouseover="showTip(event, 'fs6', 26)" class="rt">State</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="fn">action</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs8', 28)" onmouseover="showTip(event, 'fs8', 28)" class="rt">Action</span><span class="pn">)</span> <span class="o">=</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 24)" onmouseover="showTip(event, 'fs18', 24)" class="fn">nextState</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs19', 25)" onmouseover="showTip(event, 'fs19', 25)" class="fn">action</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs8', 26)" onmouseover="showTip(event, 'fs8', 26)" class="rt">Action</span><span class="pn">)</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs12', 27)" onmouseover="showTip(event, 'fs12', 27)" class="fn">state</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs6', 28)" onmouseover="showTip(event, 'fs6', 28)" class="rt">State</span><span class="pn">)</span> <span class="o">=</span>
         <span class="k">match</span> <span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="fn">action</span> <span class="k">with</span>
         <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs9', 30)" onmouseover="showTip(event, 'fs9', 30)" class="uc">Enqueue</span> <span onmouseout="hideTip(event, 'fs20', 31)" onmouseover="showTip(event, 'fs20', 31)" class="fn">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="m">List</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs21', 33)" onmouseover="showTip(event, 'fs21', 33)" class="id">append</span> <span onmouseout="hideTip(event, 'fs12', 34)" onmouseover="showTip(event, 'fs12', 34)" class="fn">state</span> <span class="pn">[</span><span onmouseout="hideTip(event, 'fs20', 35)" onmouseover="showTip(event, 'fs20', 35)" class="fn">x</span><span class="pn">]</span>
         <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs10', 36)" onmouseover="showTip(event, 'fs10', 36)" class="uc">Dequeue</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 37)" onmouseover="showTip(event, 'fs12', 37)" class="fn">state</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs22', 38)" onmouseover="showTip(event, 'fs22', 38)" class="id">Tail</span>
@@ -83,7 +83,7 @@ This time the action is executed on the actual system under test.</p>
 <span class="l">4: </span>
 <span class="l">5: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 39)" onmouseover="showTip(event, 'fs23', 39)" class="fn">run</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs15', 40)" onmouseover="showTip(event, 'fs15', 40)" class="fn">sut</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs13', 41)" onmouseover="showTip(event, 'fs13', 41)" class="rt">Sut</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs19', 42)" onmouseover="showTip(event, 'fs19', 42)" class="fn">action</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs8', 43)" onmouseover="showTip(event, 'fs8', 43)" class="rt">Action</span><span class="pn">)</span> <span class="o">=</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 39)" onmouseover="showTip(event, 'fs23', 39)" class="fn">run</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs19', 40)" onmouseover="showTip(event, 'fs19', 40)" class="fn">action</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs8', 41)" onmouseover="showTip(event, 'fs8', 41)" class="rt">Action</span><span class="pn">)</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs15', 42)" onmouseover="showTip(event, 'fs15', 42)" class="fn">sut</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs13', 43)" onmouseover="showTip(event, 'fs13', 43)" class="rt">Sut</span><span class="pn">)</span> <span class="o">=</span>
         <span class="k">match</span> <span onmouseout="hideTip(event, 'fs19', 44)" onmouseover="showTip(event, 'fs19', 44)" class="fn">action</span> <span class="k">with</span>
         <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs9', 45)" onmouseover="showTip(event, 'fs9', 45)" class="uc">Enqueue</span> <span onmouseout="hideTip(event, 'fs20', 46)" onmouseover="showTip(event, 'fs20', 46)" class="fn">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs15', 47)" onmouseover="showTip(event, 'fs15', 47)" class="fn">sut</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs24', 48)" onmouseover="showTip(event, 'fs24', 48)" class="id">Enqueue</span> <span onmouseout="hideTip(event, 'fs20', 49)" onmouseover="showTip(event, 'fs20', 49)" class="fn">x</span>
         <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs10', 50)" onmouseover="showTip(event, 'fs10', 50)" class="uc">Dequeue</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs15', 51)" onmouseover="showTip(event, 'fs15', 51)" class="fn">sut</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs25', 52)" onmouseover="showTip(event, 'fs25', 52)" class="id">Dequeue</span><span class="pn">(</span><span class="pn">)</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs26', 53)" onmouseover="showTip(event, 'fs26', 53)" class="fn">ignore</span>
@@ -103,9 +103,9 @@ and a precondition (that should hold in order to perform an action):</p>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 56)" onmouseover="showTip(event, 'fs27', 56)" class="fn">invariant</span> <span class="pn">(</span><span class="id">_</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs6', 57)" onmouseover="showTip(event, 'fs6', 57)" class="rt">State</span><span class="pn">)</span> <span class="o">=</span> <span class="k">true</span>
 
-    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 58)" onmouseover="showTip(event, 'fs28', 58)" class="fn">precondition</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs12', 59)" onmouseover="showTip(event, 'fs12', 59)" class="fn">state</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs6', 60)" onmouseover="showTip(event, 'fs6', 60)" class="rt">State</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs19', 61)" onmouseover="showTip(event, 'fs19', 61)" class="fn">action</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs8', 62)" onmouseover="showTip(event, 'fs8', 62)" class="rt">Action</span><span class="pn">)</span> <span class="o">=</span>
-        <span class="k">match</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs12', 63)" onmouseover="showTip(event, 'fs12', 63)" class="fn">state</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs19', 64)" onmouseover="showTip(event, 'fs19', 64)" class="fn">action</span><span class="pn">)</span> <span class="k">with</span>
-        <span class="pn">|</span> <span class="pn">[</span><span class="pn">]</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs10', 65)" onmouseover="showTip(event, 'fs10', 65)" class="uc">Dequeue</span> <span class="k">-&gt;</span> <span class="k">false</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 58)" onmouseover="showTip(event, 'fs28', 58)" class="fn">precondition</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs19', 59)" onmouseover="showTip(event, 'fs19', 59)" class="fn">action</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs8', 60)" onmouseover="showTip(event, 'fs8', 60)" class="rt">Action</span><span class="pn">)</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs12', 61)" onmouseover="showTip(event, 'fs12', 61)" class="fn">state</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs6', 62)" onmouseover="showTip(event, 'fs6', 62)" class="rt">State</span><span class="pn">)</span> <span class="o">=</span>
+        <span class="k">match</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs19', 63)" onmouseover="showTip(event, 'fs19', 63)" class="fn">action</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs12', 64)" onmouseover="showTip(event, 'fs12', 64)" class="fn">state</span><span class="pn">)</span> <span class="k">with</span>
+        <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs10', 65)" onmouseover="showTip(event, 'fs10', 65)" class="uc">Dequeue</span><span class="pn">,</span> <span class="pn">[</span><span class="pn">]</span> <span class="k">-&gt;</span> <span class="k">false</span>
         <span class="pn">|</span> <span class="id">_</span> <span class="k">-&gt;</span> <span class="k">true</span>
 </code></pre></td>
 </tr>
@@ -147,7 +147,7 @@ conforms to the model.</p>
         <span onmouseout="hideTip(event, 'fs27', 76)" onmouseover="showTip(event, 'fs27', 76)" class="fn">invariant</span> <span onmouseout="hideTip(event, 'fs12', 77)" onmouseover="showTip(event, 'fs12', 77)" class="fn">state</span>
         <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs30', 78)" onmouseover="showTip(event, 'fs30', 78)" class="fn">check</span> <span class="s">&quot;Input Invariant&quot;</span>
 
-        <span onmouseout="hideTip(event, 'fs28', 79)" onmouseover="showTip(event, 'fs28', 79)" class="fn">precondition</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs12', 80)" onmouseover="showTip(event, 'fs12', 80)" class="fn">state</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs19', 81)" onmouseover="showTip(event, 'fs19', 81)" class="fn">action</span><span class="pn">)</span>
+        <span onmouseout="hideTip(event, 'fs28', 79)" onmouseover="showTip(event, 'fs28', 79)" class="fn">precondition</span> <span onmouseout="hideTip(event, 'fs19', 80)" onmouseover="showTip(event, 'fs19', 80)" class="fn">action</span> <span onmouseout="hideTip(event, 'fs12', 81)" onmouseover="showTip(event, 'fs12', 81)" class="fn">state</span>
         <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs30', 82)" onmouseover="showTip(event, 'fs30', 82)" class="fn">check</span> <span class="s">&quot;Precondition&quot;</span>
 
         <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 83)" onmouseover="showTip(event, 'fs15', 83)" class="fn">sut</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 84)" onmouseover="showTip(event, 'fs11', 84)" class="fn">fromModel</span> <span onmouseout="hideTip(event, 'fs12', 85)" onmouseover="showTip(event, 'fs12', 85)" class="fn">state</span>
@@ -155,12 +155,12 @@ conforms to the model.</p>
         <span onmouseout="hideTip(event, 'fs14', 86)" onmouseover="showTip(event, 'fs14', 86)" class="fn">toModel</span> <span onmouseout="hideTip(event, 'fs15', 87)" onmouseover="showTip(event, 'fs15', 87)" class="fn">sut</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 88)" onmouseover="showTip(event, 'fs12', 88)" class="fn">state</span>
         <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs30', 89)" onmouseover="showTip(event, 'fs30', 89)" class="fn">check</span> <span class="s">&quot;Initial State&quot;</span>
 
-        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs35', 90)" onmouseover="showTip(event, 'fs35', 90)" class="fn">expected</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 91)" onmouseover="showTip(event, 'fs18', 91)" class="fn">nextState</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs12', 92)" onmouseover="showTip(event, 'fs12', 92)" class="fn">state</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs19', 93)" onmouseover="showTip(event, 'fs19', 93)" class="fn">action</span><span class="pn">)</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs35', 90)" onmouseover="showTip(event, 'fs35', 90)" class="fn">expected</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 91)" onmouseover="showTip(event, 'fs18', 91)" class="fn">nextState</span> <span onmouseout="hideTip(event, 'fs19', 92)" onmouseover="showTip(event, 'fs19', 92)" class="fn">action</span> <span onmouseout="hideTip(event, 'fs12', 93)" onmouseover="showTip(event, 'fs12', 93)" class="fn">state</span>
 
         <span onmouseout="hideTip(event, 'fs27', 94)" onmouseover="showTip(event, 'fs27', 94)" class="fn">invariant</span> <span onmouseout="hideTip(event, 'fs35', 95)" onmouseover="showTip(event, 'fs35', 95)" class="fn">expected</span>
         <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs30', 96)" onmouseover="showTip(event, 'fs30', 96)" class="fn">check</span> <span class="s">&quot;Expected Invariant&quot;</span>
 
-        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs36', 97)" onmouseover="showTip(event, 'fs36', 97)" class="fn">actual</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs23', 98)" onmouseover="showTip(event, 'fs23', 98)" class="fn">run</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs15', 99)" onmouseover="showTip(event, 'fs15', 99)" class="fn">sut</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs19', 100)" onmouseover="showTip(event, 'fs19', 100)" class="fn">action</span><span class="pn">)</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs36', 97)" onmouseover="showTip(event, 'fs36', 97)" class="fn">actual</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs23', 98)" onmouseover="showTip(event, 'fs23', 98)" class="fn">run</span> <span onmouseout="hideTip(event, 'fs19', 99)" onmouseover="showTip(event, 'fs19', 99)" class="fn">action</span> <span onmouseout="hideTip(event, 'fs15', 100)" onmouseover="showTip(event, 'fs15', 100)" class="fn">sut</span>
 
         <span onmouseout="hideTip(event, 'fs36', 101)" onmouseover="showTip(event, 'fs36', 101)" class="fn">actual</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs35', 102)" onmouseover="showTip(event, 'fs35', 102)" class="fn">expected</span>
         <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs30', 103)" onmouseover="showTip(event, 'fs30', 103)" class="fn">check</span> <span class="s">&quot;Final State&quot;</span>
@@ -274,12 +274,12 @@ but we can reuse <code>actionGenerator</code>, <code>nextState</code> and <code>
                 <span onmouseout="hideTip(event, 'fs38', 169)" onmouseover="showTip(event, 'fs38', 169)" class="fn">actionGenerator</span> <span onmouseout="hideTip(event, 'fs12', 170)" onmouseover="showTip(event, 'fs12', 170)" class="fn">state</span>
                 <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs40', 171)" onmouseover="showTip(event, 'fs40', 171)" class="m">Gen</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs41', 172)" onmouseover="showTip(event, 'fs41', 172)" class="id">map</span> <span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs19', 173)" onmouseover="showTip(event, 'fs19', 173)" class="fn">action</span> <span class="k">-&gt;</span> <span class="pn">{</span>
                     <span class="k">new</span> <span onmouseout="hideTip(event, 'fs66', 174)" onmouseover="showTip(event, 'fs66', 174)" class="rt">Operation</span><span class="pn">&lt;</span><span onmouseout="hideTip(event, 'fs13', 175)" onmouseover="showTip(event, 'fs13', 175)" class="rt">Sut</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs6', 176)" onmouseover="showTip(event, 'fs6', 176)" class="rt">State</span><span class="pn">&gt;</span><span class="pn">(</span><span class="pn">)</span> <span class="k">with</span>
-                        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs62', 177)" onmouseover="showTip(event, 'fs62', 177)" class="id">__</span><span class="pn">.</span><span class="fn">Run</span> <span onmouseout="hideTip(event, 'fs12', 178)" onmouseover="showTip(event, 'fs12', 178)" class="fn">state</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 179)" onmouseover="showTip(event, 'fs18', 179)" class="fn">nextState</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs12', 180)" onmouseover="showTip(event, 'fs12', 180)" class="fn">state</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs19', 181)" onmouseover="showTip(event, 'fs19', 181)" class="fn">action</span><span class="pn">)</span>
+                        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs62', 177)" onmouseover="showTip(event, 'fs62', 177)" class="id">__</span><span class="pn">.</span><span class="fn">Run</span> <span onmouseout="hideTip(event, 'fs12', 178)" onmouseover="showTip(event, 'fs12', 178)" class="fn">state</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 179)" onmouseover="showTip(event, 'fs18', 179)" class="fn">nextState</span> <span onmouseout="hideTip(event, 'fs19', 180)" onmouseover="showTip(event, 'fs19', 180)" class="fn">action</span> <span onmouseout="hideTip(event, 'fs12', 181)" onmouseover="showTip(event, 'fs12', 181)" class="fn">state</span>
 
                         <span class="k">member</span> <span onmouseout="hideTip(event, 'fs67', 182)" onmouseover="showTip(event, 'fs67', 182)" class="id">__</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs68', 183)" onmouseover="showTip(event, 'fs68', 183)" class="fn">Check</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs15', 184)" onmouseover="showTip(event, 'fs15', 184)" class="fn">sut</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs12', 185)" onmouseover="showTip(event, 'fs12', 185)" class="fn">state</span><span class="pn">)</span> <span class="o">=</span>
-                            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs36', 186)" onmouseover="showTip(event, 'fs36', 186)" class="fn">actual</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs23', 187)" onmouseover="showTip(event, 'fs23', 187)" class="fn">run</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs15', 188)" onmouseover="showTip(event, 'fs15', 188)" class="fn">sut</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs19', 189)" onmouseover="showTip(event, 'fs19', 189)" class="fn">action</span><span class="pn">)</span>
+                            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs36', 186)" onmouseover="showTip(event, 'fs36', 186)" class="fn">actual</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs23', 187)" onmouseover="showTip(event, 'fs23', 187)" class="fn">run</span> <span onmouseout="hideTip(event, 'fs19', 188)" onmouseover="showTip(event, 'fs19', 188)" class="fn">action</span> <span onmouseout="hideTip(event, 'fs15', 189)" onmouseover="showTip(event, 'fs15', 189)" class="fn">sut</span>
                             <span onmouseout="hideTip(event, 'fs12', 190)" onmouseover="showTip(event, 'fs12', 190)" class="fn">state</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs36', 191)" onmouseover="showTip(event, 'fs36', 191)" class="fn">actual</span>
-                            <span class="o">|@</span> <span onmouseout="hideTip(event, 'fs69', 192)" onmouseover="showTip(event, 'fs69', 192)" class="fn">sprintf</span> <span class="s">&quot;Inc: model = </span><span class="pf">%A</span><span class="s">, actual = </span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs12', 193)" onmouseover="showTip(event, 'fs12', 193)" class="fn">state</span> <span onmouseout="hideTip(event, 'fs36', 194)" onmouseover="showTip(event, 'fs36', 194)" class="fn">actual</span>
+                            <span class="o">|@</span> <span onmouseout="hideTip(event, 'fs69', 192)" onmouseover="showTip(event, 'fs69', 192)" class="fn">sprintf</span> <span class="s">&quot;model = </span><span class="pf">%A</span><span class="s">, actual = </span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs12', 193)" onmouseover="showTip(event, 'fs12', 193)" class="fn">state</span> <span onmouseout="hideTip(event, 'fs36', 194)" onmouseover="showTip(event, 'fs36', 194)" class="fn">actual</span>
 
                         <span class="k">override</span> <span onmouseout="hideTip(event, 'fs67', 195)" onmouseover="showTip(event, 'fs67', 195)" class="id">__</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs70', 196)" onmouseover="showTip(event, 'fs70', 196)" class="fn">ToString</span><span class="pn">(</span><span class="pn">)</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs69', 197)" onmouseover="showTip(event, 'fs69', 197)" class="fn">sprintf</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs19', 198)" onmouseover="showTip(event, 'fs19', 198)" class="fn">action</span> <span class="pn">}</span><span class="pn">)</span>
     <span class="pn">}</span>
@@ -296,18 +296,67 @@ but we can reuse <code>actionGenerator</code>, <code>nextState</code> and <code>
 case of test failures.
 Notice also the added flexibility given by the <code>Check</code> method: if the state is hard to retrieve,
 instead of calling <code>run</code> and checking the whole state, we are free to focus only on the relevant part of the system.</p>
-<h2>Understanding vs verifying</h2>
+<h2>Model View Update</h2>
 <p>Instead of discussing how effective the approach is for verification,
-let me point out that modeling is valuable at least to document a system
-and to better understand it: the <code>nextState</code> function expresses our understanding of the system.</p>
-<p>If you're familiar with the <a href="https://zaid-ajaj.github.io/the-elmish-book/#/">ELM Architecture</a>,
-looking at <code>nextState</code> should ring a bell: just add a view function and you have the MVU pattern!</p>
-<p>And F# allows to use the same code both for verification with .NET
-and for visualization with JavaScript.</p>
-<p>I think this is an aspect worth exploring, in the spirit of Saymour Papert.</p>
-<h2>Final remark on abstraction</h2>
+let me point out that modeling is valuable at least for documentation:
+the <code>nextState</code> function expresses our understanding of the system.</p>
+<p>If you're familiar with the <a href="https://guide.elm-lang.org/architecture/">ELM Architecture</a>,
+looking at <code>nextState</code> should ring a bell: just add a view function and you have the MVU pattern!
+And the nice thing is that <a href="https://zaid-ajaj.github.io/the-elmish-book/#/">F#</a> allows to use
+the same code, both for verification with .NET and for visualization with JavaScript.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="pp">#r</span> <span class="s">&quot;nuget: Fable.Elmish.React&quot;</span>
+
+    <span class="k">open</span> <span onmouseout="hideTip(event, 'fs73', 204)" onmouseover="showTip(event, 'fs73', 204)" class="id">Elmish</span>
+    <span class="k">open</span> <span onmouseout="hideTip(event, 'fs73', 205)" onmouseover="showTip(event, 'fs73', 205)" class="id">Elmish</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs74', 206)" onmouseover="showTip(event, 'fs74', 206)" class="id">React</span>
+    <span class="k">open</span> <span onmouseout="hideTip(event, 'fs75', 207)" onmouseover="showTip(event, 'fs75', 207)" class="id">Fable</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs76', 208)" onmouseover="showTip(event, 'fs76', 208)" class="id">React</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs77', 209)" onmouseover="showTip(event, 'fs77', 209)" class="m">Props</span>
+    <span class="k">open</span> <span onmouseout="hideTip(event, 'fs75', 210)" onmouseover="showTip(event, 'fs75', 210)" class="id">Fable</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs76', 211)" onmouseover="showTip(event, 'fs76', 211)" class="id">React</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs78', 212)" onmouseover="showTip(event, 'fs78', 212)" class="m">Helpers</span>
+    <span class="k">open</span> <span onmouseout="hideTip(event, 'fs75', 213)" onmouseover="showTip(event, 'fs75', 213)" class="id">Fable</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs76', 214)" onmouseover="showTip(event, 'fs76', 214)" class="id">React</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs79', 215)" onmouseover="showTip(event, 'fs79', 215)" class="m">Standard</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs80', 216)" onmouseover="showTip(event, 'fs80', 216)" class="fn">init</span> <span class="pn">(</span><span class="pn">)</span> <span class="o">=</span> <span class="pn">[</span><span class="pn">]</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs81', 217)" onmouseover="showTip(event, 'fs81', 217)" class="id">rnd</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 218)" onmouseover="showTip(event, 'fs1', 218)" class="id">System</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs82', 219)" onmouseover="showTip(event, 'fs82', 219)" class="id">Random</span><span class="pn">(</span><span class="pn">)</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs83', 220)" onmouseover="showTip(event, 'fs83', 220)" class="fn">view</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs12', 221)" onmouseover="showTip(event, 'fs12', 221)" class="fn">state</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs6', 222)" onmouseover="showTip(event, 'fs6', 222)" class="rt">State</span><span class="pn">)</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs84', 223)" onmouseover="showTip(event, 'fs84', 223)" class="fn">dispatch</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs85', 224)" onmouseover="showTip(event, 'fs85', 224)" class="rt">Action</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs86', 225)" onmouseover="showTip(event, 'fs86', 225)" class="rt">unit</span><span class="pn">)</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs87', 226)" onmouseover="showTip(event, 'fs87', 226)" class="fn">div</span> <span class="pn">[</span><span class="pn">]</span> <span class="pn">[</span>
+            <span onmouseout="hideTip(event, 'fs88', 227)" onmouseover="showTip(event, 'fs88', 227)" class="fn">button</span> <span class="pn">[</span> <span onmouseout="hideTip(event, 'fs89', 228)" onmouseover="showTip(event, 'fs89', 228)" class="uc">OnClick</span> <span class="pn">(</span><span class="k">fun</span> <span class="id">_</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs81', 229)" onmouseover="showTip(event, 'fs81', 229)" class="id">rnd</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs90', 230)" onmouseover="showTip(event, 'fs90', 230)" class="id">Next</span><span class="pn">(</span><span class="n">100</span><span class="pn">)</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs9', 231)" onmouseover="showTip(event, 'fs9', 231)" class="uc">Enqueue</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs84', 232)" onmouseover="showTip(event, 'fs84', 232)" class="fn">dispatch</span><span class="pn">)</span> <span class="pn">]</span> <span class="pn">[</span> <span onmouseout="hideTip(event, 'fs91', 233)" onmouseover="showTip(event, 'fs91', 233)" class="fn">str</span> <span class="s">&quot;Enqueue&quot;</span> <span class="pn">]</span>
+            <span onmouseout="hideTip(event, 'fs88', 234)" onmouseover="showTip(event, 'fs88', 234)" class="fn">button</span> <span class="pn">[</span> <span onmouseout="hideTip(event, 'fs89', 235)" onmouseover="showTip(event, 'fs89', 235)" class="uc">OnClick</span> <span class="pn">(</span><span class="k">fun</span> <span class="id">_</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs84', 236)" onmouseover="showTip(event, 'fs84', 236)" class="fn">dispatch</span> <span onmouseout="hideTip(event, 'fs10', 237)" onmouseover="showTip(event, 'fs10', 237)" class="uc">Dequeue</span><span class="pn">)</span> <span class="pn">]</span> <span class="pn">[</span> <span onmouseout="hideTip(event, 'fs91', 238)" onmouseover="showTip(event, 'fs91', 238)" class="fn">str</span> <span class="s">&quot;Dequeue&quot;</span> <span class="pn">]</span>
+            <span onmouseout="hideTip(event, 'fs87', 239)" onmouseover="showTip(event, 'fs87', 239)" class="fn">div</span> <span class="pn">[</span><span class="pn">]</span> <span class="pn">[</span> <span onmouseout="hideTip(event, 'fs91', 240)" onmouseover="showTip(event, 'fs91', 240)" class="fn">str</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs69', 241)" onmouseover="showTip(event, 'fs69', 241)" class="fn">sprintf</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs12', 242)" onmouseover="showTip(event, 'fs12', 242)" class="fn">state</span><span class="pn">)</span> <span class="pn">]</span> <span class="c">// TODO list view</span>
+        <span class="pn">]</span>
+
+    <span onmouseout="hideTip(event, 'fs92', 243)" onmouseover="showTip(event, 'fs92', 243)" class="m">Program</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs93', 244)" onmouseover="showTip(event, 'fs93', 244)" class="id">mkSimple</span> <span onmouseout="hideTip(event, 'fs80', 245)" onmouseover="showTip(event, 'fs80', 245)" class="fn">init</span> <span onmouseout="hideTip(event, 'fs18', 246)" onmouseover="showTip(event, 'fs18', 246)" class="fn">nextState</span> <span onmouseout="hideTip(event, 'fs83', 247)" onmouseover="showTip(event, 'fs83', 247)" class="fn">view</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs92', 248)" onmouseover="showTip(event, 'fs92', 248)" class="m">Program</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs94', 249)" onmouseover="showTip(event, 'fs94', 249)" class="id">withReactSynchronous</span> <span class="s">&quot;elmish-app&quot;</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs92', 250)" onmouseover="showTip(event, 'fs92', 250)" class="m">Program</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs95', 251)" onmouseover="showTip(event, 'fs95', 251)" class="id">run</span>
+</code></pre></td>
+</tr>
+</table>
+<p>I think this 'live documentation' aspect is worth exploring, in the spirit of Saymour Papert.</p>
+<h2>Final remark</h2>
 <p>The provided example was not meant to precisely capture the essence of the queue concept.
-It may be improved and refined to this aim, but I just wanted to describe a small stateful system.</p>
+It may be improved and refined to this aim, but I just wanted to describe a small stateful system,
+with no attempt to define a proper abstraction.</p>
 <p>I often praise abstract data types but, quoting Leslie Lamport
 (via <a href="https://pron.github.io/posts/tlaplus_part4#model-based-specifications-and-information-hiding">Ron Pressler</a>):</p>
 <blockquote>
@@ -321,8 +370,8 @@ besides <a href="https://bertrandmeyer.com/2019/12/03/are-my-requirements-comple
 and <a href="https://giacomociti.github.io/2018/05/26/The-lost-art-of-data-abstraction.html">stacks</a>
 (a quip of Djikstra, according to Bertrand Meyer, is that the purpose of ADT theory is to define stacks).</p>
 <p>So, if we leave aside <a href="https://plato.stanford.edu/archives/spr2016/entries/computer-science/">philosophy</a>,
-we can lower a bit the pretenses of full abstraction and understand our systems better,
-adopting the operational paradigm of state machines.</p>
+we can lower a bit our theoretical pretenses and understand our systems better,
+embracing the operational paradigm of state machines.</p>
 
 
 <div class="fsdocs-tip" id="fs1">namespace System</div>
@@ -390,18 +439,18 @@ from Microsoft.FSharp.Collections<br /><em>&lt;summary&gt;Contains operations fo
  values of this type, or pattern match against the values directly.
  &lt;/remarks&gt;<br />&lt;exclude /&gt;</em></div>
 <div class="fsdocs-tip" id="fs17">val ofSeq : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><em>&lt;summary&gt;Builds a new list from the given enumerable object.&lt;/summary&gt;<br />&lt;param name=&quot;source&quot;&gt;The input sequence.&lt;/param&gt;<br />&lt;returns&gt;The list of elements from the sequence.&lt;/returns&gt;</em></div>
-<div class="fsdocs-tip" id="fs18">val nextState : state:State * action:Action -&gt; int list</div>
+<div class="fsdocs-tip" id="fs18">val nextState : action:Action -&gt; state:State -&gt; int list</div>
 <div class="fsdocs-tip" id="fs19">val action : Action</div>
 <div class="fsdocs-tip" id="fs20">val x : int</div>
 <div class="fsdocs-tip" id="fs21">val append : list1:&#39;T list -&gt; list2:&#39;T list -&gt; &#39;T list<br /><em>&lt;summary&gt;Returns a new list that contains the elements of the first list
  followed by elements of the second.&lt;/summary&gt;<br />&lt;param name=&quot;list1&quot;&gt;The first input list.&lt;/param&gt;<br />&lt;param name=&quot;list2&quot;&gt;The second input list.&lt;/param&gt;<br />&lt;returns&gt;The resulting list.&lt;/returns&gt;</em></div>
 <div class="fsdocs-tip" id="fs22">property List.Tail: int list with get<br /><em>&lt;summary&gt;Gets the tail of the list, which is a list containing all the elements of the list, excluding the first element &lt;/summary&gt;</em></div>
-<div class="fsdocs-tip" id="fs23">val run : sut:Sut * action:Action -&gt; int list</div>
+<div class="fsdocs-tip" id="fs23">val run : action:Action -&gt; sut:Sut -&gt; int list</div>
 <div class="fsdocs-tip" id="fs24">System.Collections.Generic.Queue.Enqueue(item: int) : unit</div>
 <div class="fsdocs-tip" id="fs25">System.Collections.Generic.Queue.Dequeue() : int</div>
 <div class="fsdocs-tip" id="fs26">val ignore : value:&#39;T -&gt; unit<br /><em>&lt;summary&gt;Ignore the passed value. This is often used to throw away results of a computation.&lt;/summary&gt;<br />&lt;param name=&quot;value&quot;&gt;The value to ignore.&lt;/param&gt;</em></div>
 <div class="fsdocs-tip" id="fs27">val invariant : State -&gt; bool</div>
-<div class="fsdocs-tip" id="fs28">val precondition : state:State * action:Action -&gt; bool</div>
+<div class="fsdocs-tip" id="fs28">val precondition : action:Action -&gt; state:State -&gt; bool</div>
 <div class="fsdocs-tip" id="fs29">val test : state:State * action:Action -&gt; unit</div>
 <div class="fsdocs-tip" id="fs30">val check : (string -&gt; bool -&gt; unit)</div>
 <div class="fsdocs-tip" id="fs31">val error : string</div>
@@ -520,4 +569,65 @@ The post-conditions are the invariants that will be checked; when these do not h
 from FsCheck.Experimental</div>
 <div class="fsdocs-tip" id="fs72">val toProperty : spec:Machine&lt;&#39;Actual,&#39;Model&gt; -&gt; Property<br /><em>&lt;summary&gt;
 Turn a machine specification into a property.
+&lt;/summary&gt;</em></div>
+<div class="fsdocs-tip" id="fs73">namespace Elmish</div>
+<div class="fsdocs-tip" id="fs74">namespace Elmish.React</div>
+<div class="fsdocs-tip" id="fs75">namespace Fable</div>
+<div class="fsdocs-tip" id="fs76">namespace Fable.React</div>
+<div class="fsdocs-tip" id="fs77">module Props
+
+from Fable.React</div>
+<div class="fsdocs-tip" id="fs78">module Helpers
+
+from Fable.React</div>
+<div class="fsdocs-tip" id="fs79">module Standard
+
+from Fable.React</div>
+<div class="fsdocs-tip" id="fs80">val init : unit -&gt; &#39;a list</div>
+<div class="fsdocs-tip" id="fs81">val rnd : System.Random</div>
+<div class="fsdocs-tip" id="fs82">Multiple items<br />type Random =
+  new : unit -&gt; unit + 1 overload
+  member Next : unit -&gt; int + 2 overloads
+  member NextBytes : buffer: byte [] -&gt; unit + 1 overload
+  member NextDouble : unit -&gt; float
+  member Sample : unit -&gt; float<br /><em>&lt;summary&gt;Represents a pseudo-random number generator, which is an algorithm that produces a sequence of numbers that meet certain statistical requirements for randomness.&lt;/summary&gt;</em><br /><br />--------------------<br />System.Random() : System.Random<br />System.Random(Seed: int) : System.Random</div>
+<div class="fsdocs-tip" id="fs83">val view : state:State -&gt; dispatch:(Action -&gt; unit) -&gt; Fable.React.ReactElement</div>
+<div class="fsdocs-tip" id="fs84">val dispatch : (Action -&gt; unit)</div>
+<div class="fsdocs-tip" id="fs85">Multiple items<br />union case HTMLAttr.Action: string -&gt; HTMLAttr<br /><br />--------------------<br />type Action =
+  | Enqueue of int
+  | Dequeue</div>
+<div class="fsdocs-tip" id="fs86">type unit = Unit<br /><em>&lt;summary&gt;The type &#39;unit&#39;, which has only one value &quot;()&quot;. This value is special and
+ always uses the representation &#39;null&#39;.&lt;/summary&gt;<br />&lt;category index=&quot;1&quot;&gt;Basic Types&lt;/category&gt;</em></div>
+<div class="fsdocs-tip" id="fs87">val div : props:seq&lt;IHTMLProp&gt; -&gt; children:seq&lt;Fable.React.ReactElement&gt; -&gt; Fable.React.ReactElement</div>
+<div class="fsdocs-tip" id="fs88">val button : props:seq&lt;IHTMLProp&gt; -&gt; children:seq&lt;Fable.React.ReactElement&gt; -&gt; Fable.React.ReactElement</div>
+<div class="fsdocs-tip" id="fs89">union case DOMAttr.OnClick: (Browser.Types.MouseEvent -&gt; unit) -&gt; DOMAttr</div>
+<div class="fsdocs-tip" id="fs90">System.Random.Next() : int<br />System.Random.Next(maxValue: int) : int<br />System.Random.Next(minValue: int, maxValue: int) : int</div>
+<div class="fsdocs-tip" id="fs91">val str : s:string -&gt; Fable.React.ReactElement<br /><em>&lt;summary&gt;
+ Alias of `ofString`
+&lt;/summary&gt;</em></div>
+<div class="fsdocs-tip" id="fs92">Multiple items<br />module Program
+
+from Elmish.React<br /><br />--------------------<br />module Program
+
+from Elmish<br /><em>&lt;summary&gt;
+ Program module - functions to manipulate program instances
+&lt;/summary&gt;</em><br /><br />--------------------<br />type Program&lt;&#39;arg,&#39;model,&#39;msg,&#39;view&gt; =
+  private { init: &#39;arg -&gt; &#39;model * Cmd&lt;&#39;msg&gt;
+            update: &#39;msg -&gt; &#39;model -&gt; &#39;model * Cmd&lt;&#39;msg&gt;
+            subscribe: &#39;model -&gt; Cmd&lt;&#39;msg&gt;
+            view: &#39;model -&gt; Dispatch&lt;&#39;msg&gt; -&gt; &#39;view
+            setState: &#39;model -&gt; Dispatch&lt;&#39;msg&gt; -&gt; unit
+            onError: string * exn -&gt; unit
+            syncDispatch: Dispatch&lt;&#39;msg&gt; -&gt; Dispatch&lt;&#39;msg&gt; }<br /><em>&lt;summary&gt;
+ Program type captures various aspects of program behavior
+&lt;/summary&gt;</em></div>
+<div class="fsdocs-tip" id="fs93">val mkSimple : init:(&#39;arg -&gt; &#39;model) -&gt; update:(&#39;msg -&gt; &#39;model -&gt; &#39;model) -&gt; view:(&#39;model -&gt; Dispatch&lt;&#39;msg&gt; -&gt; &#39;view) -&gt; Program&lt;&#39;arg,&#39;model,&#39;msg,&#39;view&gt;<br /><em>&lt;summary&gt;
+ Simple program that produces only new state with `init` and `update`.
+&lt;/summary&gt;</em></div>
+<div class="fsdocs-tip" id="fs94">val withReactSynchronous : placeholderId:string -&gt; program:Program&lt;&#39;a,&#39;b,&#39;c,Fable.React.ReactElement&gt; -&gt; Program&lt;&#39;a,&#39;b,&#39;c,Fable.React.ReactElement&gt;<br /><em>&lt;summary&gt;
+ Renders React root component inside html element identified by placeholderId.
+ New renders are triggered immediately after an update.
+&lt;/summary&gt;</em></div>
+<div class="fsdocs-tip" id="fs95">val run : program:Program&lt;unit,&#39;model,&#39;msg,&#39;view&gt; -&gt; unit<br /><em>&lt;summary&gt;
+ Start the dispatch loop with `unit` for the init() function.
 &lt;/summary&gt;</em></div>
