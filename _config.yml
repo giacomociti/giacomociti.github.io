@@ -46,5 +46,10 @@ exclude:
     - Gemfile
     - Gemfile.lock
     - build.fsx
+    - build.sh
+    - start.sh
+    - nuget.config
+    - .gitignore
     - template.html
     - fsx/
+    - node/
