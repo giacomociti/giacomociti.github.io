@@ -25,14 +25,14 @@ We model its state as a list and we focus on two actions only: enqueue and deque
         | Dequeue
 
 (**
-The whole point of the approach is to execute an action both on the abstract model and on the actual system,
+The whole point of the approach is to perform an action both on the abstract model and on the actual system,
 and then check that the resulting state is the same.
 
 ### The system and its model
-The functions `fromModel` and `toModel` define the correspondance between the abstract model and
-the actual system. They are easy to implement in this example but may be challenging in more realistic scenarios.
-Such challenges may be due to the system under test hiding its internal state or persisting it in a distributed
-environment. Most libraries for model based testing in fact take a different route (as we will see later),
+The functions `fromModel` and `toModel` define the correspondance between the actual system and its abstract model.
+They are easy to implement in this example but may be challenging in more realistic scenarios.
+Such challenges may arise from the system hiding its internal state or persisting it in a distributed
+environment. Most libraries for model based testing in fact take a different route (as we will see later)
 but for now we naively assume that:
 
 - `fromModel` puts the system under test in the given state.
@@ -60,7 +60,7 @@ list representing the state of the system.
 The abstract effect of a dequeue is to remove the head of the list representing the state.
 
 The `run` function is the actual counterpart to the `nextState` function above.
-This time the action is executed on the actual system under test.
+This time the action is executed on the system under test.
 *)
     let run (action: Action) (sut: Sut) =
         match action with
@@ -131,7 +131,7 @@ Then we run the action on the actual system, and we verify that, after the execu
 the state of the system under test is the same as the expected one according to the model.
 
 ### Random input
-To run `test` with many random inputs we need a generator of state-action pairs satisfying invariant and precondition.
+To run `test` with many random inputs we need a generator of state-action pairs satisfying invariant and precondition:
 *)
 (*** define-output:test ***)
     #r "nuget: FsCheck"
@@ -227,11 +227,18 @@ the same code, both for verification with .NET and for visualization with JavaSc
 
     let rnd = System.Random()
 
+    let colors = [| "DarkSlateGray"; "DarkSlateBlue"; "CadetBlue"; "DarkCyan"; "DarkSeaGreen"; "Olive"; "Pink" |]
+
+    let item n =
+        let color = colors.[n % colors.Length]
+        td [Style [Color color; Border "solid" ]] [str (string n)]
+
     let view (state: State) (dispatch: Action -> unit) =
         div [] [
-            button [ OnClick (fun _ -> rnd.Next(100) |> Enqueue |> dispatch) ] [ str "Enqueue" ]
-            state |> List.rev |> List.map string |> String.concat " - " |> str
-            if not state.IsEmpty then button [ OnClick (fun _ -> Dequeue |> dispatch) ] [ str "Dequeue" ]
+            h2 [] [str "What a wonderful queue!"]
+            button [ OnClick (fun _ -> rnd.Next(100) |> Enqueue |> dispatch) ] [ str "Enqueue -> " ]
+            state |> List.rev |> List.map item |> table []
+            if not state.IsEmpty then button [ OnClick (fun _ -> Dequeue |> dispatch) ] [ str " -> Dequeue" ]
         ]
 
     Program.mkSimple init nextState view
@@ -239,9 +246,7 @@ the same code, both for verification with .NET and for visualization with JavaSc
     |> Program.run
 
 (**
-
-I think this [live documentation](/content/model-based-testing/index.html) aspect is worth exploring, in the spirit of Saymour Papert.
-
+I think this [live documentation](/content/model-based-testing/index.html) aspect is worth exploring.
 
 ## Final remark
 
@@ -257,14 +262,12 @@ I often praise abstract data types but, quoting Leslie Lamport
 > We just list what the system must and must not do, and we have a completely abstract specification.
 > It sounds wonderful; it just doesn’t work in practice.
 
-I have to admit we rarely encounter formal ADT specifications
-besides [simple examples](https://bertrandmeyer.com/2019/12/03/are-my-requirements-complete/)
+I have to admit we rarely encounter formal ADT specifications besides simple examples
 and [stacks](https://giacomociti.github.io/2018/05/26/The-lost-art-of-data-abstraction.html)
 (a quip of Djikstra, according to Bertrand Meyer, is that the purpose of ADT theory is to define stacks).
 
-So, if we leave aside [philosophy](https://plato.stanford.edu/archives/spr2016/entries/computer-science/),
-we can lower a bit our theoretical pretenses and understand our systems better,
-embracing the operational paradigm of state machines.
+So, if we leave aside philosophy, we can lower a bit our theoretical pretenses
+and understand our systems better, embracing the operational paradigm of state machines.
 
 *)
 

@@ -21,11 +21,18 @@ let init () = []
 
 let rnd = System.Random()
 
+let colors = [| "DarkSlateGray"; "DarkSlateBlue"; "CadetBlue"; "DarkCyan"; "DarkSeaGreen"; "Olive"; "Pink" |]
+
+let item n =
+    let color = colors.[n % colors.Length]
+    td [Style [Color color; Border "solid" ]] [str (string n)]
+
 let view (state: State) (dispatch: Action -> unit) =
     div [] [
-        button [ OnClick (fun _ -> rnd.Next(100) |> Enqueue |> dispatch) ] [ str "Enqueue" ]
-        state |> List.rev |> List.map string |> String.concat " - " |> str
-        if not state.IsEmpty then button [ OnClick (fun _ -> Dequeue |> dispatch) ] [ str "Dequeue" ]
+        h2 [] [str "What a wonderful queue!"]
+        button [ OnClick (fun _ -> rnd.Next(100) |> Enqueue |> dispatch) ] [ str "Enqueue -> " ]
+        state |> List.rev |> List.map item |> table []
+        if not state.IsEmpty then button [ OnClick (fun _ -> Dequeue |> dispatch) ] [ str " -> Dequeue" ]
     ]
 
 Program.mkSimple init nextState view
