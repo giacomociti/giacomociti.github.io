@@ -48,3 +48,4 @@ exclude:
     - build.fsx
     - template.html
     - fsx/
+    - node/

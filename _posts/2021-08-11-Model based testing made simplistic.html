@@ -342,17 +342,17 @@ the same code, both for verification with .NET and for visualization with JavaSc
     <span class="k">let</span> <span onmouseout="hideTip(event, 'fs83', 220)" onmouseover="showTip(event, 'fs83', 220)" class="fn">view</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs12', 221)" onmouseover="showTip(event, 'fs12', 221)" class="fn">state</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs6', 222)" onmouseover="showTip(event, 'fs6', 222)" class="rt">State</span><span class="pn">)</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs84', 223)" onmouseover="showTip(event, 'fs84', 223)" class="fn">dispatch</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs85', 224)" onmouseover="showTip(event, 'fs85', 224)" class="rt">Action</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs86', 225)" onmouseover="showTip(event, 'fs86', 225)" class="rt">unit</span><span class="pn">)</span> <span class="o">=</span>
         <span onmouseout="hideTip(event, 'fs87', 226)" onmouseover="showTip(event, 'fs87', 226)" class="fn">div</span> <span class="pn">[</span><span class="pn">]</span> <span class="pn">[</span>
             <span onmouseout="hideTip(event, 'fs88', 227)" onmouseover="showTip(event, 'fs88', 227)" class="fn">button</span> <span class="pn">[</span> <span onmouseout="hideTip(event, 'fs89', 228)" onmouseover="showTip(event, 'fs89', 228)" class="uc">OnClick</span> <span class="pn">(</span><span class="k">fun</span> <span class="id">_</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs81', 229)" onmouseover="showTip(event, 'fs81', 229)" class="id">rnd</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs90', 230)" onmouseover="showTip(event, 'fs90', 230)" class="id">Next</span><span class="pn">(</span><span class="n">100</span><span class="pn">)</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs9', 231)" onmouseover="showTip(event, 'fs9', 231)" class="uc">Enqueue</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs84', 232)" onmouseover="showTip(event, 'fs84', 232)" class="fn">dispatch</span><span class="pn">)</span> <span class="pn">]</span> <span class="pn">[</span> <span onmouseout="hideTip(event, 'fs91', 233)" onmouseover="showTip(event, 'fs91', 233)" class="fn">str</span> <span class="s">&quot;Enqueue&quot;</span> <span class="pn">]</span>
-            <span onmouseout="hideTip(event, 'fs88', 234)" onmouseover="showTip(event, 'fs88', 234)" class="fn">button</span> <span class="pn">[</span> <span onmouseout="hideTip(event, 'fs89', 235)" onmouseover="showTip(event, 'fs89', 235)" class="uc">OnClick</span> <span class="pn">(</span><span class="k">fun</span> <span class="id">_</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs84', 236)" onmouseover="showTip(event, 'fs84', 236)" class="fn">dispatch</span> <span onmouseout="hideTip(event, 'fs10', 237)" onmouseover="showTip(event, 'fs10', 237)" class="uc">Dequeue</span><span class="pn">)</span> <span class="pn">]</span> <span class="pn">[</span> <span onmouseout="hideTip(event, 'fs91', 238)" onmouseover="showTip(event, 'fs91', 238)" class="fn">str</span> <span class="s">&quot;Dequeue&quot;</span> <span class="pn">]</span>
-            <span onmouseout="hideTip(event, 'fs87', 239)" onmouseover="showTip(event, 'fs87', 239)" class="fn">div</span> <span class="pn">[</span><span class="pn">]</span> <span class="pn">[</span> <span onmouseout="hideTip(event, 'fs91', 240)" onmouseover="showTip(event, 'fs91', 240)" class="fn">str</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs69', 241)" onmouseover="showTip(event, 'fs69', 241)" class="fn">sprintf</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs12', 242)" onmouseover="showTip(event, 'fs12', 242)" class="fn">state</span><span class="pn">)</span> <span class="pn">]</span> <span class="c">// TODO list view</span>
+            <span onmouseout="hideTip(event, 'fs12', 234)" onmouseover="showTip(event, 'fs12', 234)" class="fn">state</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs92', 235)" onmouseover="showTip(event, 'fs92', 235)" class="m">List</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs93', 236)" onmouseover="showTip(event, 'fs93', 236)" class="id">rev</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs92', 237)" onmouseover="showTip(event, 'fs92', 237)" class="m">List</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs94', 238)" onmouseover="showTip(event, 'fs94', 238)" class="id">map</span> <span onmouseout="hideTip(event, 'fs95', 239)" onmouseover="showTip(event, 'fs95', 239)" class="fn">string</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs96', 240)" onmouseover="showTip(event, 'fs96', 240)" class="m">String</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs97', 241)" onmouseover="showTip(event, 'fs97', 241)" class="id">concat</span> <span class="s">&quot; - &quot;</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs91', 242)" onmouseover="showTip(event, 'fs91', 242)" class="fn">str</span>
+            <span class="k">if</span> <span onmouseout="hideTip(event, 'fs33', 243)" onmouseover="showTip(event, 'fs33', 243)" class="fn">not</span> <span onmouseout="hideTip(event, 'fs12', 244)" onmouseover="showTip(event, 'fs12', 244)" class="fn">state</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs46', 245)" onmouseover="showTip(event, 'fs46', 245)" class="id">IsEmpty</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs88', 246)" onmouseover="showTip(event, 'fs88', 246)" class="fn">button</span> <span class="pn">[</span> <span onmouseout="hideTip(event, 'fs89', 247)" onmouseover="showTip(event, 'fs89', 247)" class="uc">OnClick</span> <span class="pn">(</span><span class="k">fun</span> <span class="id">_</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 248)" onmouseover="showTip(event, 'fs10', 248)" class="uc">Dequeue</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs84', 249)" onmouseover="showTip(event, 'fs84', 249)" class="fn">dispatch</span><span class="pn">)</span> <span class="pn">]</span> <span class="pn">[</span> <span onmouseout="hideTip(event, 'fs91', 250)" onmouseover="showTip(event, 'fs91', 250)" class="fn">str</span> <span class="s">&quot;Dequeue&quot;</span> <span class="pn">]</span>
         <span class="pn">]</span>
 
-    <span onmouseout="hideTip(event, 'fs92', 243)" onmouseover="showTip(event, 'fs92', 243)" class="m">Program</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs93', 244)" onmouseover="showTip(event, 'fs93', 244)" class="id">mkSimple</span> <span onmouseout="hideTip(event, 'fs80', 245)" onmouseover="showTip(event, 'fs80', 245)" class="fn">init</span> <span onmouseout="hideTip(event, 'fs18', 246)" onmouseover="showTip(event, 'fs18', 246)" class="fn">nextState</span> <span onmouseout="hideTip(event, 'fs83', 247)" onmouseover="showTip(event, 'fs83', 247)" class="fn">view</span>
-    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs92', 248)" onmouseover="showTip(event, 'fs92', 248)" class="m">Program</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs94', 249)" onmouseover="showTip(event, 'fs94', 249)" class="id">withReactSynchronous</span> <span class="s">&quot;elmish-app&quot;</span>
-    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs92', 250)" onmouseover="showTip(event, 'fs92', 250)" class="m">Program</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs95', 251)" onmouseover="showTip(event, 'fs95', 251)" class="id">run</span>
+    <span onmouseout="hideTip(event, 'fs98', 251)" onmouseover="showTip(event, 'fs98', 251)" class="m">Program</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs99', 252)" onmouseover="showTip(event, 'fs99', 252)" class="id">mkSimple</span> <span onmouseout="hideTip(event, 'fs80', 253)" onmouseover="showTip(event, 'fs80', 253)" class="fn">init</span> <span onmouseout="hideTip(event, 'fs18', 254)" onmouseover="showTip(event, 'fs18', 254)" class="fn">nextState</span> <span onmouseout="hideTip(event, 'fs83', 255)" onmouseover="showTip(event, 'fs83', 255)" class="fn">view</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs98', 256)" onmouseover="showTip(event, 'fs98', 256)" class="m">Program</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs100', 257)" onmouseover="showTip(event, 'fs100', 257)" class="id">withReactSynchronous</span> <span class="s">&quot;elmish-app&quot;</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs98', 258)" onmouseover="showTip(event, 'fs98', 258)" class="m">Program</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs101', 259)" onmouseover="showTip(event, 'fs101', 259)" class="id">run</span>
 </code></pre></td>
 </tr>
 </table>
-<p>I think this 'live documentation' aspect is worth exploring, in the spirit of Saymour Papert.</p>
+<p>I think this <a href="/content/model-based-testing/index.html">live documentation</a> aspect is worth exploring, in the spirit of Saymour Papert.</p>
 <h2>Final remark</h2>
 <p>The provided example was not meant to precisely capture the essence of the queue concept.
 It may be improved and refined to this aim, but I just wanted to describe a small stateful system,
@@ -605,7 +605,43 @@ from Fable.React</div>
 <div class="fsdocs-tip" id="fs91">val str : s:string -&gt; Fable.React.ReactElement<br /><em>&lt;summary&gt;
  Alias of `ofString`
 &lt;/summary&gt;</em></div>
-<div class="fsdocs-tip" id="fs92">Multiple items<br />module Program
+<div class="fsdocs-tip" id="fs92">Multiple items<br />union case HTMLAttr.List: string -&gt; HTMLAttr<br /><br />--------------------<br />module List
+
+from Microsoft.FSharp.Collections<br /><em>&lt;summary&gt;Contains operations for working with values of type &lt;see cref=&quot;T:Microsoft.FSharp.Collections.list`1&quot; /&gt;.&lt;/summary&gt;<br />&lt;namespacedoc&gt;&lt;summary&gt;Operations for collections such as lists, arrays, sets, maps and sequences. See also 
+    &lt;a href=&quot;https://docs.microsoft.com/dotnet/fsharp/language-reference/fsharp-collection-types&quot;&gt;F# Collection Types&lt;/a&gt; in the F# Language Guide.
+ &lt;/summary&gt;&lt;/namespacedoc&gt;</em><br /><br />--------------------<br />type List&lt;&#39;T&gt; =
+  | ( [] )
+  | ( :: ) of Head: &#39;T * Tail: &#39;T list
+    interface IReadOnlyList&lt;&#39;T&gt;
+    interface IReadOnlyCollection&lt;&#39;T&gt;
+    interface IEnumerable
+    interface IEnumerable&lt;&#39;T&gt;
+    member GetReverseIndex : rank:int * offset:int -&gt; int
+    member GetSlice : startIndex:int option * endIndex:int option -&gt; &#39;T list
+    static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list
+    member Head : &#39;T
+    member IsEmpty : bool
+    member Item : index:int -&gt; &#39;T with get
+    ...<br /><em>&lt;summary&gt;The type of immutable singly-linked lists.&lt;/summary&gt;<br />&lt;remarks&gt;Use the constructors &lt;c&gt;[]&lt;/c&gt; and &lt;c&gt;::&lt;/c&gt; (infix) to create values of this type, or
+ the notation &lt;c&gt;[1;2;3]&lt;/c&gt;. Use the values in the &lt;c&gt;List&lt;/c&gt; module to manipulate 
+ values of this type, or pattern match against the values directly.
+ &lt;/remarks&gt;<br />&lt;exclude /&gt;</em></div>
+<div class="fsdocs-tip" id="fs93">val rev : list:&#39;T list -&gt; &#39;T list<br /><em>&lt;summary&gt;Returns a new list with the elements in reverse order.&lt;/summary&gt;<br />&lt;param name=&quot;list&quot;&gt;The input list.&lt;/param&gt;<br />&lt;returns&gt;The reversed list.&lt;/returns&gt;</em></div>
+<div class="fsdocs-tip" id="fs94">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U list<br /><em>&lt;summary&gt;Builds a new collection whose elements are the results of applying the given function
+ to each of the elements of the collection.&lt;/summary&gt;<br />&lt;param name=&quot;mapping&quot;&gt;The function to transform elements from the input list.&lt;/param&gt;<br />&lt;param name=&quot;list&quot;&gt;The input list.&lt;/param&gt;<br />&lt;returns&gt;The list of transformed elements.&lt;/returns&gt;</em></div>
+<div class="fsdocs-tip" id="fs95">Multiple items<br />val string : value:&#39;T -&gt; string<br /><em>&lt;summary&gt;Converts the argument to a string using &lt;c&gt;ToString&lt;/c&gt;.&lt;/summary&gt;<br />&lt;remarks&gt;For standard integer and floating point values the and any type that implements &lt;c&gt;IFormattable&lt;/c&gt;&lt;c&gt;ToString&lt;/c&gt; conversion uses &lt;c&gt;CultureInfo.InvariantCulture&lt;/c&gt;. &lt;/remarks&gt;<br />&lt;param name=&quot;value&quot;&gt;The input value.&lt;/param&gt;<br />&lt;returns&gt;The converted string.&lt;/returns&gt;</em><br /><br />--------------------<br />type string = System.String<br /><em>&lt;summary&gt;An abbreviation for the CLI type &lt;see cref=&quot;T:System.String&quot; /&gt;.&lt;/summary&gt;<br />&lt;category&gt;Basic Types&lt;/category&gt;</em></div>
+<div class="fsdocs-tip" id="fs96">module String
+
+from Microsoft.FSharp.Core<br /><em>&lt;summary&gt;Functional programming operators for string processing.  Further string operations
+ are available via the member functions on strings and other functionality in
+  &lt;a href=&quot;http://msdn2.microsoft.com/en-us/library/system.string.aspx&quot;&gt;System.String&lt;/a&gt; 
+ and &lt;a href=&quot;http://msdn2.microsoft.com/library/system.text.regularexpressions.aspx&quot;&gt;System.Text.RegularExpressions&lt;/a&gt; types.
+ &lt;/summary&gt;<br />&lt;category&gt;Strings and Text&lt;/category&gt;</em></div>
+<div class="fsdocs-tip" id="fs97">val concat : sep:string -&gt; strings:seq&lt;string&gt; -&gt; string<br /><em>&lt;summary&gt;Returns a new string made by concatenating the given strings
+ with separator &lt;c&gt;sep&lt;/c&gt;, that is &lt;c&gt;a1 + sep + ... + sep + aN&lt;/c&gt;.&lt;/summary&gt;<br />&lt;param name=&quot;sep&quot;&gt;The separator string to be inserted between the strings
+ of the input sequence.&lt;/param&gt;<br />&lt;param name=&quot;strings&quot;&gt;The sequence of strings to be concatenated.&lt;/param&gt;<br />&lt;returns&gt;A new string consisting of the concatenated strings separated by
+ the separation string.&lt;/returns&gt;<br />&lt;exception cref=&quot;T:System.ArgumentNullException&quot;&gt;Thrown when &lt;c&gt;strings&lt;/c&gt; is null.&lt;/exception&gt;</em></div>
+<div class="fsdocs-tip" id="fs98">Multiple items<br />module Program
 
 from Elmish.React<br /><br />--------------------<br />module Program
 
@@ -621,13 +657,13 @@ from Elmish<br /><em>&lt;summary&gt;
             syncDispatch: Dispatch&lt;&#39;msg&gt; -&gt; Dispatch&lt;&#39;msg&gt; }<br /><em>&lt;summary&gt;
  Program type captures various aspects of program behavior
 &lt;/summary&gt;</em></div>
-<div class="fsdocs-tip" id="fs93">val mkSimple : init:(&#39;arg -&gt; &#39;model) -&gt; update:(&#39;msg -&gt; &#39;model -&gt; &#39;model) -&gt; view:(&#39;model -&gt; Dispatch&lt;&#39;msg&gt; -&gt; &#39;view) -&gt; Program&lt;&#39;arg,&#39;model,&#39;msg,&#39;view&gt;<br /><em>&lt;summary&gt;
+<div class="fsdocs-tip" id="fs99">val mkSimple : init:(&#39;arg -&gt; &#39;model) -&gt; update:(&#39;msg -&gt; &#39;model -&gt; &#39;model) -&gt; view:(&#39;model -&gt; Dispatch&lt;&#39;msg&gt; -&gt; &#39;view) -&gt; Program&lt;&#39;arg,&#39;model,&#39;msg,&#39;view&gt;<br /><em>&lt;summary&gt;
  Simple program that produces only new state with `init` and `update`.
 &lt;/summary&gt;</em></div>
-<div class="fsdocs-tip" id="fs94">val withReactSynchronous : placeholderId:string -&gt; program:Program&lt;&#39;a,&#39;b,&#39;c,Fable.React.ReactElement&gt; -&gt; Program&lt;&#39;a,&#39;b,&#39;c,Fable.React.ReactElement&gt;<br /><em>&lt;summary&gt;
+<div class="fsdocs-tip" id="fs100">val withReactSynchronous : placeholderId:string -&gt; program:Program&lt;&#39;a,&#39;b,&#39;c,Fable.React.ReactElement&gt; -&gt; Program&lt;&#39;a,&#39;b,&#39;c,Fable.React.ReactElement&gt;<br /><em>&lt;summary&gt;
  Renders React root component inside html element identified by placeholderId.
  New renders are triggered immediately after an update.
 &lt;/summary&gt;</em></div>
-<div class="fsdocs-tip" id="fs95">val run : program:Program&lt;unit,&#39;model,&#39;msg,&#39;view&gt; -&gt; unit<br /><em>&lt;summary&gt;
+<div class="fsdocs-tip" id="fs101">val run : program:Program&lt;unit,&#39;model,&#39;msg,&#39;view&gt; -&gt; unit<br /><em>&lt;summary&gt;
  Start the dispatch loop with `unit` for the init() function.
 &lt;/summary&gt;</em></div>

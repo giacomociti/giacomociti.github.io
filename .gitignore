@@ -6,3 +6,9 @@ paket*.exe
 
 .fake
 .ionide
+
+**/node_modules
+**/bin
+**/obj
+**/.fable
+
