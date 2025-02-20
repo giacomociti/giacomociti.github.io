@@ -1,0 +1,82 @@
+/* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  font-family: Arial, sans-serif;
+}
+
+nav {
+  width: 200px;
+  background-color: #f4f4f4;
+  padding: 20px;
+  height: 100vh;
+  position: fixed;
+  overflow-y: auto;
+}
+
+nav ul {
+  list-style-type: none;
+}
+
+nav li {
+  margin-bottom: 10px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #333;
+  display: block;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+nav a:hover {
+  background-color: #ddd;
+}
+
+main {
+  margin-left: 220px; /* Adjusted to ensure content is not covered by the nav */
+  padding: 20px;
+  flex: 1;
+  max-width: 1000px; /* Added max-width */
+  margin-right: auto; /* Center content */
+}
+
+zero-md {
+  margin-left: 220px; /* Adjusted to ensure content is not covered by the nav */
+  padding: 20px;
+  flex: 1;
+  max-width: 1000px; /* Added max-width */
+  margin-right: auto; /* Center content */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  nav {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  main {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100%; /* Remove max-width on small screens */
+  }
+
+  zero-md {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100%; /* Remove max-width on small screens */
+  }
+}
